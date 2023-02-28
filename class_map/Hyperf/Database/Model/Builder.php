@@ -24,8 +24,7 @@ use Hyperf\Utils\Str;
 use Hyperf\Utils\Traits\ForwardsCalls;
 
 use Carbon\Carbon;
-use App\Utils\FunctionHelper;
-use App\Constants\Constant;
+use Business\Hyperf\Constants\Constant;
 use Hyperf\Snowflake\IdGeneratorInterface;
 use Hyperf\Utils\ApplicationContext;
 use Hyperf\Context\Context;
@@ -1409,7 +1408,7 @@ class Builder
 
         //设置时区
 //        $storeId = data_get($requestData,Constant::DB_TABLE_STORE_ID, 0);//data_get($this->getModel(), 'storeId', 0);
-//        FunctionHelper::setTimezone($storeId);
+//        setAppTimezone();
 
         $nowTime = Carbon::now()->timestamp;
 
