@@ -34,9 +34,6 @@
             "HyperfTest\\": "tests"
         }
     },
-    "replace": {
-        "jmiy/business-hyperf": "*"
-    },
     "config": {
         "sort-packages": true
     },
