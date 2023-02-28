@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Business\Hyperf;
 
 //use Business\Hyperf\Process\RestartServiceProcess;
-use Business\Hyperf\Util\Redis\Lua\LuaFactory;
-use Business\Hyperf\Util\Redis\Lua\Contracts\LuaInterface;
+use Business\Hyperf\Utils\Redis\Lua\LuaFactory;
+use Business\Hyperf\Utils\Redis\Lua\Contracts\LuaInterface;
 
 use Hyperf\Database\Schema\PostgresBuilder;
 use Hyperf\Database\Schema\Grammars\PostgresGrammar as SchemaGrammar;
