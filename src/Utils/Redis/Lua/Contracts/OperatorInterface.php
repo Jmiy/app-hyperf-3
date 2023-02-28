@@ -9,7 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-namespace Business\Hyperf\Util\Redis\Lua\Contracts;
+namespace Business\Hyperf\Utils\Redis\Lua\Contracts;
 
 interface OperatorInterface
 {

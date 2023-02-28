@@ -1,6 +1,6 @@
 <?php
 
-namespace Business\Hyperf\Util\Redis\Lua;
+namespace Business\Hyperf\Utils\Redis\Lua;
 
 class LuaFactory
 {

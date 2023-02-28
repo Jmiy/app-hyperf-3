@@ -10,12 +10,12 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace Business\Hyperf\Util\Redis\Lua;
+namespace Business\Hyperf\Utils\Redis\Lua;
 
-use Business\Hyperf\Util\Redis\Lua\Contracts\LuaInterface;
-use Business\Hyperf\Util\Redis\Lua\Exception\OperatorNotFoundException;
-use Business\Hyperf\Util\Redis\Lua\Contracts\OperatorInterface;
-use Business\Hyperf\Util\Redis\Lua\Contracts\BatchFuzzyDelete;
+use Business\Hyperf\Utils\Redis\Lua\Contracts\LuaInterface;
+use Business\Hyperf\Utils\Redis\Lua\Exception\OperatorNotFoundException;
+use Business\Hyperf\Utils\Redis\Lua\Contracts\OperatorInterface;
+use Business\Hyperf\Utils\Redis\Lua\Contracts\BatchFuzzyDelete;
 
 use Hyperf\Redis\RedisFactory;
 use Hyperf\Utils\ApplicationContext;
