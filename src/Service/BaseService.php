@@ -19,12 +19,10 @@ use Business\Hyperf\Service\Traits\HandleCache;
 use Business\Hyperf\Service\Traits\BaseDb;
 use Business\Hyperf\Service\Traits\Aspect;
 use Business\Hyperf\Service\Traits\BaseClient;
-use Business\Hyperf\Utils\Response;
-use Hyperf\Utils\Arr;
-use Business\Hyperf\Service\Traits\HandleTask;
 use Business\Hyperf\Service\Traits\BaseFile;
 use Business\Hyperf\Service\Traits\Queue;
-use Business\Hyperf\Service\Traits\AnalysisSku;
+use Business\Hyperf\Utils\Response;
+use Hyperf\Utils\Arr;
 
 class BaseService
 {
@@ -35,9 +33,7 @@ class BaseService
         Aspect,
         BaseClient,
         BaseFile,
-        Queue,
-        AnalysisSku,
-        HandleTask;
+        Queue;
 
     /**
      * 获取公共参数
