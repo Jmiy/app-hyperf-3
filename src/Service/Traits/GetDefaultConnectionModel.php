@@ -1,0 +1,34 @@
+<?php
+
+/**
+ * base trait
+ * User: Jmiy
+ * Date: 2019-05-16
+ * Time: 16:50
+ */
+
+namespace App\Service\Traits;
+
+use App\Constants\Constant;
+use App\Model\BaseModel;
+use Hyperf\Database\Model\Relations\Relation;
+
+trait GetDefaultConnectionModel
+{
+    /**
+     * 获取模型 model
+     * @param string|null $connection 数据库连接 强制使用model配置的connection
+     * @param string|null $table 表名 默认使用model配置的表名
+     * @param array|null $parameters model初始化参数
+     * @param string|null $make model别名 默认:null
+     * @param Relation|null $relation 关联对象
+     * @param array|null $dbConfig 数据库配置
+     * @return BaseModel|Relation|string|null
+     */
+    public static function getModel(?string $connection = Constant::DB_CONNECTION_DEFAULT, ?string $table = null, ?array $parameters = [], ?string $make = null, ?Relation &$relation = null, ?array $dbConfig = [])
+    {
+        //data_set($parameters, 'attributes.storeId', $connection, false); //设置 model attributes.storeId
+        return BaseModel::createModel(Constant::DB_EXECUTION_PLAN_DEFAULT_CONNECTION . $table, static::getMake($make), $parameters, $table, $relation, $dbConfig);
+    }
+
+}
