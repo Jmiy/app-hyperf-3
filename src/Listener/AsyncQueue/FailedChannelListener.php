@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace App\Listener\AsyncQueue;
+namespace Business\Hyperf\Listener\AsyncQueue;
 
 use Hyperf\AsyncQueue\Event\QueueLength;
 use Hyperf\Contract\StdoutLoggerInterface;

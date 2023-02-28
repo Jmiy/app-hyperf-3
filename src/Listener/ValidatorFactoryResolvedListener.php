@@ -7,7 +7,7 @@ declare(strict_types=1);
  * 使用 @Listener 注解时需 use Hyperf\Event\Annotation\Listener; 命名空间
  */
 
-namespace App\Listener;
+namespace Business\Hyperf\Listener;
 
 use Hyperf\Event\Annotation\Listener;
 use Hyperf\Event\Contract\ListenerInterface;

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Utils\Support\Facades\OpenAi;
+namespace Business\Hyperf\Utils\Support\Facades\OpenAi;
 
-use App\Service\Traits\Base;
+use Business\Hyperf\Service\Traits\Base;
 
 class OpenAi
 {

@@ -10,10 +10,10 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace App\Model;
+namespace Business\Hyperf\Model;
 
-use App\Constants\Constant;
-use App\Utils\Arrays\MyArr;
+use Business\Hyperf\Constants\Constant;
+use Business\Hyperf\Utils\Arrays\MyArr;
 use Hyperf\DbConnection\Db;
 use Hyperf\Utils\Arr;
 use Hyperf\Database\Model\Builder;
@@ -23,7 +23,7 @@ use Hyperf\Database\Model\Relations\Relation;
  * 批量生成model：php bin/hyperf.php gen:model --pool=default
  * 生成指定的model：php bin/hyperf.php gen:model table_name --pool=default
  * Class BaseModel
- * @package App\Model
+ * @package Business\Hyperf\Model
  */
 class BaseModel extends Model
 {
@@ -223,7 +223,7 @@ class BaseModel extends Model
      * 'u.a=kkk',
      * ];
      * //->onlyTrashed()  withTrashed
-     * $query = \App\Model\User::from('user as u')->withoutTrashed()->buildWhere($where)
+     * $query = \Business\Hyperf\Model\User::from('user as u')->withoutTrashed()->buildWhere($where)
      * ->leftJoin('user_roles as b', function ($join) {
      * $join->on('b.user_id', '=', 'u.id'); //->where('b.status', '=', 1);
      * })

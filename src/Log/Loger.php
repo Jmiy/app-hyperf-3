@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Log;
+namespace Business\Hyperf\Log;
 
 use Hyperf\Logger\LoggerFactory;
 use Hyperf\Utils\ApplicationContext;

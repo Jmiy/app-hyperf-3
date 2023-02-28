@@ -5,12 +5,12 @@ declare(strict_types=1);
  * Job
  */
 
-namespace App\Job;
+namespace Business\Hyperf\Job;
 
-use App\Constants\Constant;
-use App\Service\Log\LogService;
+use Business\Hyperf\Constants\Constant;
+use Business\Hyperf\Service\Log\LogService;
 use Carbon\Carbon;
-use App\Exception\Handler\AppExceptionHandler as ExceptionHandler;
+use Business\Hyperf\Exception\Handler\AppExceptionHandler as ExceptionHandler;
 
 class DingDingJob extends Job
 {

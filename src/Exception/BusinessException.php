@@ -11,7 +11,7 @@ declare(strict_types=1);
  */
 namespace Business\Hyperf\Exception;
 
-use App\Constants\ErrorCode;
+use Business\Hyperf\Constants\ErrorCode;
 use Hyperf\Server\Exception\ServerException;
 use Throwable;
 

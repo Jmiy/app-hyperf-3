@@ -10,11 +10,11 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace App\Utils\Support\Facades;
+namespace Business\Hyperf\Utils\Support\Facades;
 
-use App\Utils\Exception\OperatorNotFoundException;
-use App\Utils\Contracts\Redis\Lua\OperatorInterface;
-use App\Utils\Contracts\Redis\Lua\BatchFuzzyDelete;
+use Business\Hyperf\Utils\Exception\OperatorNotFoundException;
+use Business\Hyperf\Utils\Contracts\Redis\Lua\OperatorInterface;
+use Business\Hyperf\Utils\Contracts\Redis\Lua\BatchFuzzyDelete;
 
 
 class Lua

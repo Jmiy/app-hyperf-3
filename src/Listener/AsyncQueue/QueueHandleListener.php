@@ -10,10 +10,10 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace App\Listener\AsyncQueue;
+namespace Business\Hyperf\Listener\AsyncQueue;
 
-use App\Constants\Constant;
-use App\Utils\Monitor\Contract;
+use Business\Hyperf\Constants\Constant;
+use Business\Hyperf\Utils\Monitor\Contract;
 use Hyperf\AsyncQueue\AnnotationJob;
 use Hyperf\AsyncQueue\Event\AfterHandle;
 use Hyperf\AsyncQueue\Event\BeforeHandle;
@@ -27,8 +27,8 @@ use Hyperf\Logger\LoggerFactory;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
-use App\Exception\Handler\AppExceptionHandler;
-use App\Job\PublicJob;
+use Business\Hyperf\Exception\Handler\AppExceptionHandler;
+use Business\Hyperf\Job\PublicJob;
 
 #[Listener]
 class QueueHandleListener implements ListenerInterface

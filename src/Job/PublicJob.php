@@ -5,13 +5,13 @@ declare(strict_types=1);
  * Job
  */
 
-namespace App\Job;
+namespace Business\Hyperf\Job;
 
-//use App\Service\LogService;
+//use Business\Hyperf\Service\LogService;
 use Hyperf\Context\Context;
 use Hyperf\Utils\Coroutine;
 
-use App\Constants\Constant;
+use Business\Hyperf\Constants\Constant;
 
 class PublicJob extends Job
 {

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Middleware;
+namespace Business\Hyperf\Middleware;
 
 use Psr\Http\Message\ServerRequestInterface;
 

@@ -7,9 +7,9 @@
  * Time: 16:50
  */
 
-namespace App\Service\Traits;
+namespace Business\Hyperf\Service\Traits;
 
-use App\Constants\Constant;
+use Business\Hyperf\Constants\Constant;
 
 trait ExistsFirst
 {

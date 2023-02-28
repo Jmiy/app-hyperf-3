@@ -7,10 +7,10 @@
  * Time: 09:27
  */
 
-namespace App\Service\Traits;
+namespace Business\Hyperf\Service\Traits;
 
-use App\Constants\Constant;
-use App\Utils\Curl;
+use Business\Hyperf\Constants\Constant;
+use Business\Hyperf\Utils\Curl;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Utils\Arr;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Middleware;
+namespace Business\Hyperf\Middleware;
 
-use App\Utils\PublicValidator;
+use Business\Hyperf\Utils\PublicValidator;
 use Hyperf\HttpServer\Router\Dispatched;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -20,7 +20,7 @@ class ValidatorMiddleware implements MiddlewareInterface
          * //                "status" => 1
          * //                "handler" => array:3 [▼
          * //                    "callback" => array:2 [▼
-         * //                        0 => "App\Controller\DocController"
+         * //                        0 => "Business\Hyperf\Controller\DocController"
          * //                        1 => "encrypt"
          * //                    ]
          * //                    "route" => "/api/shop/encrypt[/{id:\d+}]"

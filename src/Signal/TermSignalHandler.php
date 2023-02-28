@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Signal;
+namespace Business\Hyperf\Signal;
 
 use Hyperf\Signal\Annotation\Signal;
 use Hyperf\Signal\SignalHandlerInterface;

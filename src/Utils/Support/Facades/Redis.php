@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Utils\Support\Facades;
+namespace Business\Hyperf\Utils\Support\Facades;
 
 use Hyperf\Utils\ApplicationContext;
 use Hyperf\Redis\RedisFactory;

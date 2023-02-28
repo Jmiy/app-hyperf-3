@@ -8,7 +8,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-namespace App\Listener;
+namespace Business\Hyperf\Listener;
 
 use Hyperf\Database\Events\StatementPrepared;
 use Hyperf\Event\Annotation\Listener;

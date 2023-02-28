@@ -7,11 +7,11 @@
  * Time: 09:27
  */
 
-namespace App\Service\Traits;
+namespace Business\Hyperf\Service\Traits;
 
-use App\Constants\Constant;
-use App\Exception\Handler\AppExceptionHandler;
-use App\Utils\Support\Facades\HttpClient;
+use Business\Hyperf\Constants\Constant;
+use Business\Hyperf\Exception\Handler\AppExceptionHandler;
+use Business\Hyperf\Utils\Support\Facades\HttpClient;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\RequestOptions;
 use Hyperf\Guzzle\RetryMiddleware;

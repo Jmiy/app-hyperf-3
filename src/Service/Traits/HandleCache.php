@@ -7,12 +7,12 @@
  * Time: 16:50
  */
 
-namespace App\Service\Traits;
+namespace Business\Hyperf\Service\Traits;
 
-use App\Utils\Support\Facades\Cache;
-use App\Utils\Support\Facades\Redis;
+use Business\Hyperf\Utils\Support\Facades\Cache;
+use Business\Hyperf\Utils\Support\Facades\Redis;
 use Hyperf\Utils\Arr;
-use App\Constants\Constant;
+use Business\Hyperf\Constants\Constant;
 use Hyperf\Cache\CacheManager;
 use Hyperf\Cache\Listener\DeleteListenerEvent;
 use Hyperf\Cache\Annotation\Cacheable;

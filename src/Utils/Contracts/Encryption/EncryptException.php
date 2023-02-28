@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Utils\Contracts\Encryption;
+namespace Business\Hyperf\Utils\Contracts\Encryption;
 
 use RuntimeException;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Utils\Support\Facades;
+namespace Business\Hyperf\Utils\Support\Facades;
 
 use Hyperf\AsyncQueue\Driver\DriverFactory;
 use Hyperf\AsyncQueue\Driver\DriverInterface;

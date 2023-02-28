@@ -10,21 +10,21 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace App\Service;
+namespace Business\Hyperf\Service;
 
-use App\Constants\Constant;
-use App\Service\Traits\Base;
-use App\Service\Traits\ExistsFirst;
-use App\Service\Traits\HandleCache;
-use App\Service\Traits\BaseDb;
-use App\Service\Traits\Aspect;
-use App\Service\Traits\BaseClient;
-use App\Utils\Response;
+use Business\Hyperf\Constants\Constant;
+use Business\Hyperf\Service\Traits\Base;
+use Business\Hyperf\Service\Traits\ExistsFirst;
+use Business\Hyperf\Service\Traits\HandleCache;
+use Business\Hyperf\Service\Traits\BaseDb;
+use Business\Hyperf\Service\Traits\Aspect;
+use Business\Hyperf\Service\Traits\BaseClient;
+use Business\Hyperf\Utils\Response;
 use Hyperf\Utils\Arr;
-use App\Service\Traits\HandleTask;
-use App\Service\Traits\BaseFile;
-use App\Service\Traits\Queue;
-use App\Service\Traits\AnalysisSku;
+use Business\Hyperf\Service\Traits\HandleTask;
+use Business\Hyperf\Service\Traits\BaseFile;
+use Business\Hyperf\Service\Traits\Queue;
+use Business\Hyperf\Service\Traits\AnalysisSku;
 
 class BaseService
 {

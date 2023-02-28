@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Middleware\Auth;
+namespace Business\Hyperf\Middleware\Auth;
 
-use App\Constants\Constant;
-use App\Service\MenuService;
-use App\Utils\Response;
+use Business\Hyperf\Constants\Constant;
+use Business\Hyperf\Service\MenuService;
+use Business\Hyperf\Utils\Response;
 use Hyperf\Cache\CacheManager;
 use Hyperf\Contract\SessionInterface;
 use Hyperf\Redis\RedisFactory;
@@ -128,7 +128,7 @@ class AuthMiddleware implements MiddlewareInterface
          * //                "status" => 1
          * //                "handler" => (Hyperf\HttpServer\Router\Handler)array:3 [▼
          * //                    "callback" => array:2 [▼
-         * //                        0 => "App\Controller\DocController"
+         * //                        0 => "Business\Hyperf\Controller\DocController"
          * //                        1 => "encrypt"
          * //                    ]
          * //                    "route" => "/api/shop/encrypt[/{id:\d+}]"

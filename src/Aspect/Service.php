@@ -10,14 +10,14 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace App\Aspect;
+namespace Business\Hyperf\Aspect;
 
-use App\Constants\Constant;
+use Business\Hyperf\Constants\Constant;
 use Hyperf\Di\Annotation\Aspect;
 use Hyperf\Di\Aop\AbstractAspect;
 use Hyperf\Di\Aop\ProceedingJoinPoint;
 use Hyperf\Utils\Arr;
-use App\Annotation\Service AS AnnotationService;
+use Business\Hyperf\Annotation\Service AS AnnotationService;
 
 #[Aspect(classes: [], annotations: [AnnotationService::class])]
 class Service extends AbstractAspect

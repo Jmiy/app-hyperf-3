@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils;
+namespace Business\Hyperf\Utils;
 
 use Hyperf\Context\Context as HyperfContext;
 

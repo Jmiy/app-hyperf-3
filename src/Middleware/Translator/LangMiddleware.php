@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Middleware\Translator;
+namespace Business\Hyperf\Middleware\Translator;
 
-use App\Services\DictStoreService;
-use App\Services\Platform\OrderService;
-use App\Constants\Constant;
-use App\Utils\Response;
+use Business\Hyperf\Services\DictStoreService;
+use Business\Hyperf\Services\Platform\OrderService;
+use Business\Hyperf\Constants\Constant;
+use Business\Hyperf\Utils\Response;
 use Hyperf\Context\Context;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
