@@ -5,13 +5,13 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=8.0",
-        "hyperf/async-queue": "v3.0.0",
-        "hyperf/constants": "v3.0.0",
-        "hyperf/signal": "v3.0.0",
-        "hyperf/snowflake": "v3.0.0",
-        "hyperf/tracer": "v3.0.0",
-        "hyperf/translation": "v3.0.0",
-        "hyperf/validation": "v3.0.0",
+        "hyperf/async-queue": "^3.0.0",
+        "hyperf/constants": "^3.0.0",
+        "hyperf/signal": "^3.0.0",
+        "hyperf/snowflake": "^3.0.0",
+        "hyperf/tracer": "^3.0.0",
+        "hyperf/translation": "^3.0.0",
+        "hyperf/validation": "^3.0.0",
         "jmiy/hyperf-ding-notice": "dev-master"
     },
     "autoload":{
