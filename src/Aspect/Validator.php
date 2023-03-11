@@ -43,7 +43,7 @@ class Validator extends AbstractAspect
 
         $validator = PublicValidator::handle($argumentData, $rules, $messages, $type);
         if ($validator !== true) {//如果验证没有通过就提示用户
-            return $validator->getData(true);
+            return $validator->getAttributes();
         }
 
         return $proceedingJoinPoint->process();
