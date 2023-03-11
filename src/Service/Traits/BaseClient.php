@@ -158,11 +158,9 @@ trait BaseClient
                 data_set($responseData, Constant::RESPONSE_REASON_PHRASE, $e->getMessage());
             }
         } catch (\Throwable $throwable) {
-            try {
+            go(function () use ($throwable, $responseData) {
                 make(AppExceptionHandler::class)->log($throwable, 'warning', $responseData);
-            } catch (\Throwable $e1) {
-
-            }
+            });
 
             throw $throwable;
         }
