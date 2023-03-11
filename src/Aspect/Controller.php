@@ -22,8 +22,9 @@ use Hyperf\HttpServer\Annotation\Controller as AnnotationController;
 use Hyperf\HttpServer\Annotation\AutoController;
 
 use Business\Hyperf\Utils\Response;
+use Business\Hyperf\Exception\Handler\AppExceptionHandler;
 
-#[Aspect(classes: [], annotations: [AnnotationController::class, AutoController::class])]
+#[Aspect(classes: [AppExceptionHandler::class . '::handle'], annotations: [AnnotationController::class, AutoController::class])]
 class Controller extends AbstractAspect
 {
     public function process(ProceedingJoinPoint $proceedingJoinPoint)

@@ -121,12 +121,14 @@ class AppExceptionHandler extends ExceptionHandler
     {
         $this->log($throwable);
 
-        return Response::json(...Response::getResponseData(
-            Response::getDefaultResponseData($throwable->getCode(), $throwable->getMessage(), null),
-            true,
-            500,
-            []
-        ));
+        return Response::getDefaultResponseData($throwable->getCode(), $throwable->getMessage(), null,500);
+
+//        return Response::json(...Response::getResponseData(
+//            Response::getDefaultResponseData($throwable->getCode(), $throwable->getMessage(), null),
+//            true,
+//            500,
+//            []
+//        ));
 
 //        $data = json_encode(Response::getDefaultResponseData($throwable->getCode(), $throwable->getMessage(), null), JSON_UNESCAPED_UNICODE);
 //
