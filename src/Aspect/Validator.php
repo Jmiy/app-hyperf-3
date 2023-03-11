@@ -29,7 +29,7 @@ class Validator extends AbstractAspect
         $argumentData = data_get($arguments, 'keys', []);
 
         $annotation = $proceedingJoinPoint->getAnnotationMetadata()->method[AnnotationValidator::class];
-        var_dump($annotation->options);
+//        var_dump($annotation->options);
 
         $rules = [];
         $messages = [];
