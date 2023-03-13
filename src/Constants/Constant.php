@@ -80,8 +80,8 @@ class Constant
     public const DATABASES = 'databases';
     public const DATABASE = 'database';
     public const DB_CONNECTION_DEFAULT = 'default';
-    public const DB_CONNECTION_PREFIX = 'bluelans_pt_listing_';
-    public const DB_CONNECTION_PREFIX_APP = 'bluelans_pt_listing_app_';
+    public const DB_CONNECTION_PREFIX = 'bluelans_chatgpt_';
+    public const DB_CONNECTION_PREFIX_APP = 'bluelans_chatgpt_app_';
     public const DB_COLUMN_CREATED_AT = 'create_time';
     public const DB_COLUMN_UPDATED_AT = 'update_time';
     public const DB_COLUMN_STATUS = 'status';
