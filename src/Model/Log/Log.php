@@ -35,7 +35,7 @@ class Log extends BaseModel
     public const UPDATED_AT = 'update_time';
 
     public const TABLE_PREFIX = 'log';//表前缀
-    public const CONNECTION_PREFIX = Constant::DB_CONNECTION_PREFIX_PT_LISTING;//'pt_listing';//数据库连接前缀
+    public const CONNECTION_PREFIX = Constant::DB_CONNECTION_PREFIX;//'pt_listing';//数据库连接前缀
 
     /**
      * The table associated with the model.

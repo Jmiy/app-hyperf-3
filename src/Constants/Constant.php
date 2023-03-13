@@ -80,8 +80,8 @@ class Constant
     public const DATABASES = 'databases';
     public const DATABASE = 'database';
     public const DB_CONNECTION_DEFAULT = 'default';
-    public const DB_CONNECTION_PREFIX_PT_LISTING = 'bluelans_pt_listing_';
-    public const DB_CONNECTION_PREFIX_PT_LISTING_APP = 'bluelans_pt_listing_app_';
+    public const DB_CONNECTION_PREFIX = 'bluelans_pt_listing_';
+    public const DB_CONNECTION_PREFIX_APP = 'bluelans_pt_listing_app_';
     public const DB_COLUMN_CREATED_AT = 'create_time';
     public const DB_COLUMN_UPDATED_AT = 'update_time';
     public const DB_COLUMN_STATUS = 'status';
@@ -777,22 +777,22 @@ class Constant
 
 
 
-    public const DB_CONNECTION_APP_EBAY = self::DB_CONNECTION_PREFIX_PT_LISTING_APP . 'ebay';
-    public const DB_CONNECTION_APP_JOOM = self::DB_CONNECTION_PREFIX_PT_LISTING_APP . 'joom';
-    public const DB_CONNECTION_APP_SHOPEE = self::DB_CONNECTION_PREFIX_PT_LISTING_APP . 'shopee';
-    public const DB_CONNECTION_APP_AMAZON = self::DB_CONNECTION_PREFIX_PT_LISTING_APP . 'amazon';
+    public const DB_CONNECTION_APP_EBAY = self::DB_CONNECTION_PREFIX_APP . 'ebay';
+    public const DB_CONNECTION_APP_JOOM = self::DB_CONNECTION_PREFIX_APP . 'joom';
+    public const DB_CONNECTION_APP_SHOPEE = self::DB_CONNECTION_PREFIX_APP . 'shopee';
+    public const DB_CONNECTION_APP_AMAZON = self::DB_CONNECTION_PREFIX_APP . 'amazon';
 
-    public const DB_CONNECTION_APP_WISH = self::DB_CONNECTION_PREFIX_PT_LISTING_APP . 'wish';
-    public const DB_CONNECTION_APP_ALIEXPRESS = self::DB_CONNECTION_PREFIX_PT_LISTING_APP . 'aliexpress';
-    public const DB_CONNECTION_APP_LAZADA = self::DB_CONNECTION_PREFIX_PT_LISTING_APP . 'lazada';
-    public const DB_CONNECTION_APP_WALMART = self::DB_CONNECTION_PREFIX_PT_LISTING_APP . 'walmart';
+    public const DB_CONNECTION_APP_WISH = self::DB_CONNECTION_PREFIX_APP . 'wish';
+    public const DB_CONNECTION_APP_ALIEXPRESS = self::DB_CONNECTION_PREFIX_APP . 'aliexpress';
+    public const DB_CONNECTION_APP_LAZADA = self::DB_CONNECTION_PREFIX_APP . 'lazada';
+    public const DB_CONNECTION_APP_WALMART = self::DB_CONNECTION_PREFIX_APP . 'walmart';
 
-    public const DB_CONNECTION_APP_DARAZ = self::DB_CONNECTION_PREFIX_PT_LISTING_APP . 'daraz';
-    public const DB_CONNECTION_APP_ZOODMALL = self::DB_CONNECTION_PREFIX_PT_LISTING_APP . 'zoodmall';
-    public const DB_CONNECTION_APP_JDGLOBALSALES = self::DB_CONNECTION_PREFIX_PT_LISTING_APP . 'jdglobalsales';
-    public const DB_CONNECTION_APP_JUMIA = self::DB_CONNECTION_PREFIX_PT_LISTING_APP . 'jumia';
+    public const DB_CONNECTION_APP_DARAZ = self::DB_CONNECTION_PREFIX_APP . 'daraz';
+    public const DB_CONNECTION_APP_ZOODMALL = self::DB_CONNECTION_PREFIX_APP . 'zoodmall';
+    public const DB_CONNECTION_APP_JDGLOBALSALES = self::DB_CONNECTION_PREFIX_APP . 'jdglobalsales';
+    public const DB_CONNECTION_APP_JUMIA = self::DB_CONNECTION_PREFIX_APP . 'jumia';
     //Catch
-    public const DB_CONNECTION_APP_CATCH = self::DB_CONNECTION_PREFIX_PT_LISTING_APP . 'CATCH';
+    public const DB_CONNECTION_APP_CATCH = self::DB_CONNECTION_PREFIX_APP . 'CATCH';
 
     public const DB_COLUMN_FAIL_TOTAL = 'fail_total';
 }
