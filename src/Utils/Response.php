@@ -70,6 +70,7 @@ class Response
         $serverParams = Context::get(\Psr\Http\Message\ServerRequestInterface::class)->getServerParams();
         $result[Constant::EXE_TIME] = (number_format(microtime(true) - data_get($serverParams, 'request_time_float', 0), 8, '.', '') * 1000) . ' ms';
         $result['cpu_num'] = swoole_cpu_num();
+        $result['service_ip'] = getInternalIp();
 //        try {
 //
 //            $requestData = $request->all();
@@ -124,7 +125,7 @@ class Response
      * @param string|null $msg 响应提示
      * @param array|null $data 响应数据
      * @param int|null $responseStatusCode http 响应状态码（100-505）
-     * @param array|null $responseHeaders  http 响应头
+     * @param array|null $responseHeaders http 响应头
      * @return array
      */
     public static function getDefaultResponseData(
