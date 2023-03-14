@@ -29,6 +29,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Hyperf\Contract\TranslatorInterface;
 use Hyperf\Validation\Contract\ValidatorFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Hyperf\Utils\Network;
 
 if (!function_exists('getApplicationContainer')) {
     /**
@@ -148,16 +149,18 @@ if (!function_exists('getInternalIp')) {
 //            return $host;
 //        }
 
-        $ips = swoole_get_local_ip();
-        if (is_array($ips) && !empty($ips)) {
-            return current($ips);
-        }
-        /** @var mixed|string $ip */
-        $ip = gethostbyname(gethostname());
-        if (is_string($ip)) {
-            return $ip;
-        }
-        throw new \RuntimeException('Can not get the internal IP.');
+        return Network::ip();
+
+//        $ips = swoole_get_local_ip();
+//        if (is_array($ips) && !empty($ips)) {
+//            return current($ips);
+//        }
+//        /** @var mixed|string $ip */
+//        $ip = gethostbyname(gethostname());
+//        if (is_string($ip)) {
+//            return $ip;
+//        }
+//        throw new \RuntimeException('Can not get the internal IP.');
     }
 }
 
