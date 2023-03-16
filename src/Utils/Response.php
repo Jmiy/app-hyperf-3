@@ -121,17 +121,17 @@ class Response
 
     /**
      * 获取默认的响应数据结构
-     * @param int|null $code 响应状态码
-     * @param string|null $msg 响应提示
-     * @param array|null $data 响应数据
-     * @param int|null $responseStatusCode http 响应状态码（100-505）
-     * @param array|null $responseHeaders http 响应头
+     * @param mixed|int $code 响应状态码
+     * @param mixed|null $msg 响应提示
+     * @param mixed|array $data 响应数据
+     * @param int|null $responseStatusCode
+     * @param array|null $responseHeaders
      * @return array
      */
     public static function getDefaultResponseData(
-        ?int $code = Constant::CODE_SUCCESS,
-        ?string $msg = null,
-        ?array $data = Constant::PARAMETER_ARRAY_DEFAULT,
+        mixed $code = Constant::CODE_SUCCESS,
+        mixed $msg = null,
+        mixed $data = Constant::PARAMETER_ARRAY_DEFAULT,
         ?int $responseStatusCode = Constant::CODE_SUCCESS,
         ?array $responseHeaders = []
     )
