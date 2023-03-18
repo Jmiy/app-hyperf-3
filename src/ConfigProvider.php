@@ -21,6 +21,7 @@ use Hyperf\Database\Model\SoftDeletes;
 use Hyperf\Database\Model\SoftDeletingScope;
 use Hyperf\Database\Model\Relations\HasManyThrough;
 use Hyperf\AsyncQueue\Driver\Driver;
+use Hyperf\Utils\Coroutine\Concurrent;
 
 class ConfigProvider
 {
@@ -57,6 +58,8 @@ class ConfigProvider
                         Client::class => __DIR__ . '/../class_map/GuzzleHttp/Client.php',
                         RedisDriver::class => __DIR__ . '/../class_map/Hyperf/Cache/Driver/RedisDriver.php',
                         Driver::class => __DIR__ . '/../class_map/Hyperf/AsyncQueue/Driver/Driver.php',
+
+                        Concurrent::class => __DIR__ . '/../class_map/Hyperf/Utils/Coroutine/Concurrent.php',
                     ],
                 ],
             ],
