@@ -23,6 +23,7 @@ use Hyperf\HttpServer\Annotation\AutoController;
 
 use Business\Hyperf\Utils\Response;
 use Business\Hyperf\Exception\Handler\AppExceptionHandler;
+use Hyperf\HttpServer\Annotation\RequestMapping;
 
 #[Aspect(classes: [AppExceptionHandler::class . '::handle'], annotations: [AnnotationController::class, AutoController::class])]
 class Controller extends AbstractAspect
@@ -33,8 +34,16 @@ class Controller extends AbstractAspect
         // $proceedingJoinPoint 为连接点，通过该类的 process() 方法调用原方法并获得结果
         // 在调用前进行某些处理
         $result = $proceedingJoinPoint->process();
-        // 在调用后进行某些处理
 
+        $annotation = data_get($proceedingJoinPoint->getAnnotationMetadata()->method, RequestMapping::class);
+        if ($annotation) {
+            $aop = data_get($annotation, 'options.aop', true);
+            if ($aop === false) {
+                return $result;
+            }
+        }
+
+        // 在调用后进行某些处理
 //        getConfigInterface()->get(LoggerFactory::class)->get('sql')->info(
 //            sprintf('[%s] %s', get_class($proceedingJoinPoint->getInstance()), $proceedingJoinPoint->methodName)
 //        );
