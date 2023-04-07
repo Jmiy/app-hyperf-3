@@ -126,13 +126,15 @@ class DingDingJob extends Job
 
         LogService::insertData('Log', [data_get($this->trace, Constant::DB_COLUMN_PLATFORM, ''), date('Ymd')], $data);
 
-//        $dingTalk = ding();
-//        if ($this->robot !== 'default') {
-//            $dingTalk->with($this->robot)->text(implode(PHP_EOL, $messages));
-//        } else {
-//            $dingTalk->text(implode(PHP_EOL, $messages));
-//        }
-
+        $dingCodeData = explode(',', config('ding.' . $this->robot . 'code', ''));
+        if (in_array('all', $dingCodeData) || in_array($this->code, $dingCodeData)) {
+            $dingTalk = ding();
+            if ($this->robot !== 'default') {
+                $dingTalk->with($this->robot)->text(implode(PHP_EOL, $messages));
+            } else {
+                $dingTalk->text(implode(PHP_EOL, $messages));
+            }
+        }
     }
 
 }
