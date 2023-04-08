@@ -76,7 +76,7 @@ class UploadCdn extends ResourcesCdn {
         $_data = [
             Constant::RESOURCE_TYPE => $resourceType, //资源类型 1:图片 2:视频 3:js 4:css 默认:1
         ];
-        $rs = static::getDefaultResponseData(Constant::ORDER_STATUS_SHIPPED_INT, Constant::PARAMETER_STRING_DEFAULT, $_data);
+        $rs = static::getDefaultResponseData(Constant::CODE_SUCCESS, Constant::PARAMETER_STRING_DEFAULT, $_data);
 
         $files = is_array($files) ? $files : [$filePath => $files];
         $uploadData = [];

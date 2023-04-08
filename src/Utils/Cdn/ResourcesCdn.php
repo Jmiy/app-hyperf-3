@@ -239,7 +239,7 @@ class ResourcesCdn
         $path = implode('/', [
             (isset(static::$uriPrefix[$resourceType]) && static::$uriPrefix[$resourceType] ? static::$uriPrefix[$resourceType] : ''),
             $vitualPath,
-            date('YmdHis')
+            date('Ymd')
         ]);
         return static::normalizePath($path);
     }
