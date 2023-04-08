@@ -54,46 +54,40 @@ class CdnManager {
         ];
         $rs = static::getDefaultResponseData(8, 'CDN提供商: ' . $cdnProvider . '不存在', $data);
 
-        try {
+        $cdnProvider = implode('', [__NAMESPACE__, '\\', $cdnProvider]);
+        if (!class_exists($cdnProvider)) {//如果没有对应的CDN提供商，就直接返回原始url
+            return $rs;
+        }
 
-            $cdnProvider = implode('', [__NAMESPACE__, '\\', $cdnProvider]);
-            if (!class_exists($cdnProvider)) {//如果没有对应的CDN提供商，就直接返回原始url
+        if ($file instanceof RequestInterface) {
+            $request = $file;
+            $file = $request->getUploadedFiles();
+            if (empty($file)) {
+                $file = $request->file($filePath, Constant::PARAMETER_STRING_DEFAULT);
+            }
+        } elseif (is_array($file)) {
+
+        } else if (!is_string($file) && !($file instanceof UploadedFile)) {
+            if (!is_file($filePath) || !file_exists($filePath)) {
+                $filePath = parse_url($filePath, PHP_URL_PATH);
+            }
+
+            if (!is_file($filePath) || !file_exists($filePath)) {
+                data_set($rs, Constant::CODE, 6);
+                data_set($rs, Constant::MSG, $filePath . ' 文件不存在');
                 return $rs;
             }
 
-            if ($file instanceof RequestInterface) {
-                $request = $file;
-                $file = $request->getUploadedFiles();
-                if (empty($file)) {
-                    $file = $request->file($filePath, Constant::PARAMETER_STRING_DEFAULT);
-                }
-            } elseif (is_array($file)) {
-                
-            } else if (!is_string($file) && !($file instanceof UploadedFile)) {
-                if (!is_file($filePath) || !file_exists($filePath)) {
-                    $filePath = parse_url($filePath, PHP_URL_PATH);
-                }
-
-                if (!is_file($filePath) || !file_exists($filePath)) {
-                    data_set($rs, Constant::CODE, 6);
-                    data_set($rs, Constant::MSG, $filePath . ' 文件不存在');
-                    return $rs;
-                }
-
-                if (!is_readable($filePath)) {
-                    data_set($rs, Constant::CODE, 7);
-                    data_set($rs, Constant::MSG, $filePath . ' 文件不可读');
-                    return $rs;
-                }
-
-                $file = new UploadedFile($filePath, (int) filesize($filePath),(int) UPLOAD_ERR_OK, $filePath);
+            if (!is_readable($filePath)) {
+                data_set($rs, Constant::CODE, 7);
+                data_set($rs, Constant::MSG, $filePath . ' 文件不可读');
+                return $rs;
             }
 
-            $rs = $cdnProvider::upload($filePath, $file, $vitualPath, $is_del, $isCn, $fileName, $resourceType, $extData);
-        } catch (\Exception $ex) {
-            $excMsg = ExceptionHandler::getMessage($ex, config('app.debug'));
-            return static::getDefaultResponseData(data_get($excMsg, Constant::EXCEPTION_CODE, Constant::PARAMETER_INT_DEFAULT), data_get($excMsg, Constant::EXCEPTION_MSG, Constant::PARAMETER_INT_DEFAULT), $excMsg);
+            $file = new UploadedFile($filePath, (int) filesize($filePath),(int) UPLOAD_ERR_OK, $filePath);
         }
+
+        $rs = $cdnProvider::upload($filePath, $file, $vitualPath, $is_del, $isCn, $fileName, $resourceType, $extData);
 
         return $rs;
     }

@@ -132,7 +132,7 @@ class UploadCdn extends ResourcesCdn {
                 data_set($rs, Constant::DATA . Constant::LINKER . Constant::DB_COLUMN_TYPE, $filetype);
                 data_set($rs, Constant::DATA . Constant::LINKER . Constant::FILE_URL, $url);
                 data_set($rs, Constant::DATA . Constant::LINKER . Constant::FILE_FULL_PATH, implode('/', [$destinationPath, $_fileName]));
-                data_set($rs, Constant::CODE, Constant::ORDER_STATUS_SHIPPED_INT);
+                data_set($rs, Constant::CODE, Constant::CODE_SUCCESS);
                 data_set($rs, Constant::MSG, Constant::PARAMETER_STRING_DEFAULT);
 
                 data_set($uploadData, $key, $rs);

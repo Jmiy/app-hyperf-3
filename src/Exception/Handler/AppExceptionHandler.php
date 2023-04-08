@@ -57,10 +57,10 @@ class AppExceptionHandler extends ExceptionHandler
         }
 
         return [
-            'code' => $throwable->getCode(),
-            'message' => $throwable->getMessage(),
-            'type' => get_class($throwable),
-            'file' => $throwable->getFile(),
+            Constant::CODE => $throwable->getCode(),
+            Constant::EXCEPTION_MSG => $throwable->getMessage(),
+            Constant::DB_COLUMN_TYPE => get_class($throwable),
+            Constant::UPLOAD_FILE_KEY => $throwable->getFile(),
             'line' => $throwable->getLine(),
             'business_data' => $businessData,//关联数据
             'stack_trace' => $stackTrace,
@@ -121,7 +121,7 @@ class AppExceptionHandler extends ExceptionHandler
     {
         $this->log($throwable);
 
-        return Response::getDefaultResponseData($throwable->getCode(), $throwable->getMessage(), null,500);
+        return Response::getDefaultResponseData($throwable->getCode(), $throwable->getMessage(), null, 500);
 
 //        return Response::json(...Response::getResponseData(
 //            Response::getDefaultResponseData($throwable->getCode(), $throwable->getMessage(), null),
