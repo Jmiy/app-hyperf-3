@@ -244,12 +244,14 @@ class ResourcesCdn
         return static::normalizePath($path);
     }
 
-    public static function setFile($file=null,$storeId=0){
+    public static function setFile($file = null, $storeId = 0)
+    {
         $contextId = static::getContextKey($storeId) . '.file';
         return Context::set($contextId, $file);
     }
 
-    public static function getFile($storeId=0){
+    public static function getFile($storeId = 0)
+    {
         $contextId = static::getContextKey($storeId) . '.file';
         return Context::get($contextId);
     }
@@ -263,9 +265,9 @@ class ResourcesCdn
     public static function getFileName($ext = null, $fileName = '')
     {
         $fileExt = $ext;
-        if(empty($fileExt)){
+        if (empty($fileExt)) {
             $file = static::getFile();
-            $fileExt =$file ? ('.' . $file->getExtension()) : '';
+            $fileExt = $file ? ('.' . $file->getExtension()) : '';
         }
 
         return $fileName ? $fileName : (time() . rand(100, 999) . $fileExt);
