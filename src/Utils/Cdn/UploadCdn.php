@@ -18,7 +18,7 @@ class UploadCdn extends ResourcesCdn {
         ];
         $rs = static::getDefaultResponseData(Constant::ORDER_STATUS_SHIPPED_INT, Constant::PARAMETER_STRING_DEFAULT, $_data);
 
-        $fileExtension = '';
+        $fileExtension = 'png';
         if (strpos($file, 'data:image/png;base64') !== false) {
             $data = explode(',', $file); //data:image/png;base64,iVBORw0KGgoAAAANSUhEU
             $fileContents = base64_decode(end($data));
@@ -36,16 +36,10 @@ class UploadCdn extends ResourcesCdn {
         //获取 aws s3 文件系统对象
         $factory = ApplicationContext::getContainer()->get(FilesystemFactory::class);
         $filesystem = $factory->get('local');
-        $isUploaded = $filesystem->write(
+        $filesystem->write(
             $_fileName,
             $fileContents
         );
-
-        if (empty($isUploaded)) {
-            data_set($rs, Constant::CODE, Constant::PARAMETER_INT_DEFAULT);
-            data_set($rs, Constant::MSG, '上传失败');
-            return $rs;
-        }
 
         $path = config('file.storage.local.root');
         $_fileName = '/' . $_fileName;
