@@ -18,7 +18,7 @@ class UploadCdn extends ResourcesCdn {
         ];
         $rs = static::getDefaultResponseData(Constant::ORDER_STATUS_SHIPPED_INT, Constant::PARAMETER_STRING_DEFAULT, $_data);
 
-        $fileExtension = 'png';
+        $fileExtension = '';
         if (strpos($file, 'data:image/png;base64') !== false) {
             $data = explode(',', $file); //data:image/png;base64,iVBORw0KGgoAAAANSUhEU
             $fileContents = base64_decode(end($data));
