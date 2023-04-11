@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Business\Hyperf\Model\Log;
 
-use Business\Hyperf\Constants\Constant;
+use App\Constants\Constant;
 use Business\Hyperf\Model\BaseModel;
 
 /**
