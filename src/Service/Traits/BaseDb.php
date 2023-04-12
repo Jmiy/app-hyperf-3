@@ -83,12 +83,12 @@ trait BaseDb
      * 添加
      * @param array $data 数据
      * @param bool|null $isGetId 是否返回 id true:是 false:否
-     * @param string|null $connection 数据库连接 默认：default
-     * @param string|null $table 表名 默认使用model配置的表名
+     * @param string|array|null $connection 数据库连接 默认：default
+     * @param string|array|null $table 表名 默认使用model配置的表名
      * @return bool|int
      * @throws \Throwable
      */
-    public static function insert(array $data, ?bool $isGetId = false, ?string $connection = Constant::DB_CONNECTION_DEFAULT, ?string $table = null)
+    public static function insert(array $data, bool $isGetId = false, string|array $connection = Constant::DB_CONNECTION_DEFAULT, string|array $table = null)
     {
         if (empty($data)) {
             return false;
@@ -119,12 +119,12 @@ trait BaseDb
      * @param array $where 更新的条件
      * @param array $data 更新的数据
      * @param array|null $handleData 执行更新时要附加的操作
-     * @param string|null $connection 数据库连接 默认：default
-     * @param string|null $table 表名 默认使用model配置的表名
+     * @param string|array|null $connection 数据库连接 默认：default
+     * @param string|array|null $table 表名 默认使用model配置的表名
      * @return int|bool
      * @throws \Throwable
      */
-    public static function update(array $where, array $data, ?array $handleData = [], ?string $connection = Constant::DB_CONNECTION_DEFAULT, ?string $table = null): int|bool
+    public static function update(array $where, array $data, array $handleData = [], string|array $connection = Constant::DB_CONNECTION_DEFAULT, string|array $table = null): int|bool
     {
         if (empty($where) || empty($data)) {
             return false;
@@ -159,12 +159,12 @@ trait BaseDb
      * 删除
      * @param array $where 删除条件
      * @param array|null $handleData 执行数据库操作前必须通过的校验
-     * @param string|null $connection 数据库连接 默认：default
-     * @param string|null $table 表名 默认使用model配置的表名
+     * @param string|array|null $connection 数据库连接 默认：default
+     * @param string|array|null $table 表名 默认使用model配置的表名
      * @return int|bool
      * @throws \Throwable
      */
-    public static function delete(array $where, ?array $handleData = [], ?string $connection = Constant::DB_CONNECTION_DEFAULT, ?string $table = null): int|bool
+    public static function delete(array $where, array $handleData = [], string|array $connection = Constant::DB_CONNECTION_DEFAULT, string|array $table = null): int|bool
     {
         if (empty($where)) {
             return false;
@@ -200,8 +200,8 @@ trait BaseDb
      * @param array $where where条件
      * @param array $data 数据
      * @param array|null $handleData 执行数据库操作前必须通过的校验
-     * @param string|null $connection 数据库连接 默认：default
-     * @param string|null $table 表名 默认使用model配置的表名
+     * @param string|array|null $connection 数据库连接 默认：default
+     * @param string|array|null $table 表名 默认使用model配置的表名
      * @return array [
      *        'lock' => $lock,
      *        'dbOperation' => data_get($rs, 'dbOperation', 'no'),
@@ -209,7 +209,7 @@ trait BaseDb
      *    ];
      * @throws \Throwable
      */
-    public static function updateOrCreate(array $where, array $data, ?array $handleData = [], ?string $connection = Constant::DB_CONNECTION_DEFAULT, ?string $table = null)
+    public static function updateOrCreate(array $where, array $data, array $handleData = [], string|array $connection = Constant::DB_CONNECTION_DEFAULT, string|array $table = null)
     {
 //        $model = static::getModel($connection, $table);
 //
