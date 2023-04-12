@@ -68,6 +68,10 @@ trait BaseDb
      */
     public static function getModel(?string $connection = Constant::DB_CONNECTION_DEFAULT, ?string $table = null, ?array $parameters = [], ?string $make = null, ?Relation &$relation = null, ?array $dbConfig = [])
     {
+        $baseConfig = static::handleDbConfig($connection, $table);
+        $connection = data_get($baseConfig, Constant::CONNECTION);
+        $table = data_get($baseConfig, Constant::DB_EXECUTION_PLAN_TABLE);
+
         $dbConfig = [
             'database' => $connection,
         ];

@@ -84,7 +84,7 @@ class BaseModel extends Model
     public const DELETED_AT = null;//数据状态变更时间字段 默认：无
     public const EFFECTIVE = 0;//数据有效
     public const NO_EFFECTIVE = 1;//数据无效
-    public const TABLE_ALIAS = null;
+    public const TABLE_ALIAS = null;//表别名
     public const TABLE_PREFIX = null;//表前缀
     public const TABLE_SUFFIX = null;//表后缀
     public const CONNECTION_PREFIX = null;//数据库连接前缀
@@ -111,7 +111,12 @@ class BaseModel extends Model
 
 //            throw new \RuntimeException('db connection:' . $key . ' ' . json_encode(func_get_args()), 999999999);
 
-            $dbConfig = Arr::collapse([config(Constant::DATABASES . Constant::LINKER . Constant::DB_CONNECTION_DEFAULT, []), $dbConfig]);
+            $dbConfig = Arr::collapse(
+                [
+                    config(Constant::DATABASES . Constant::LINKER . Constant::DB_CONNECTION_DEFAULT, []),
+                    $dbConfig
+                ]
+            );
             $dbConfig['cache']['prefix'] = $connection;
 
             $config->set($key, $dbConfig);
