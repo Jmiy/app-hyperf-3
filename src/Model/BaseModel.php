@@ -317,22 +317,24 @@ class BaseModel extends Model
      */
     public static function handleDbConfig(string|array $connection, string|array $table)
     {
-        $connection = static::CONNECTION_PREFIX . implode('_', array_filter(
-                    Arr::collapse(
-                        [
-                            (is_array($connection) ? $connection : [$connection]),
-                            [static::CONNECTION_SUFFIX],
-                        ]
-                    )
-                )
-            );
-
-        $table = implode('_', array_filter(
+        $separator = '_';
+        $connection = implode($separator, array_filter(
                 Arr::collapse(
                     [
-                        [static::TABLE_PREFIX],
+                        [trim(static::CONNECTION_PREFIX, $separator)],
+                        (is_array($connection) ? $connection : [$connection]),
+                        [trim(static::CONNECTION_SUFFIX, $separator)],
+                    ]
+                )
+            )
+        );
+
+        $table = implode($separator, array_filter(
+                Arr::collapse(
+                    [
+                        [trim(static::TABLE_PREFIX, $separator)],
                         (is_array($table) ? $table : [$table]),
-                        [static::TABLE_SUFFIX],
+                        [trim(static::TABLE_SUFFIX, $separator)],
                     ]
                 )
             )
