@@ -85,8 +85,10 @@ class BaseModel extends Model
     public const EFFECTIVE = 0;//数据有效
     public const NO_EFFECTIVE = 1;//数据无效
     public const TABLE_ALIAS = null;
-    public const TABLE_PREFIX = null;
-    public const CONNECTION_PREFIX = null;
+    public const TABLE_PREFIX = null;//表前缀
+    public const TABLE_SUFFIX = null;//表后缀
+    public const CONNECTION_PREFIX = null;//数据库连接前缀
+    public const CONNECTION_SUFFIX = null;//数据库连接后缀
 
     public $morphToConnection = [];
 
@@ -253,9 +255,9 @@ class BaseModel extends Model
                     if (is_array($value)) {
 
                         $method = 'where';
-                         if($boolean == 'or'){
-                             $method = 'OrWhere';
-                         }
+                        if ($boolean == 'or') {
+                            $method = 'OrWhere';
+                        }
 
                         $query->{$method}(function ($query) use ($column, $value, $boolean) {
                             if (MyArr::isIndexedArray($value) && !is_array(Arr::first($value))) {
@@ -310,17 +312,28 @@ class BaseModel extends Model
      */
     public static function handleDbConfig(string|array $connection, string|array $table)
     {
-        $connection = static::CONNECTION_PREFIX . implode('_', array_filter(is_array($connection) ? $connection : [$connection]));
+        $connection = implode('_', array_filter(
+                Arr::collapse(
+                    [
+                        [static::CONNECTION_PREFIX],
+                        (is_array($connection) ? $connection : [$connection]),
+                        [static::CONNECTION_SUFFIX],
+                    ]
+                )
+            )
+        );
 
         $table = implode('_', array_filter(
                 Arr::collapse(
                     [
                         [static::TABLE_PREFIX],
-                        (is_array($table) ? $table : [$table])
+                        (is_array($table) ? $table : [$table]),
+                        [static::TABLE_SUFFIX],
                     ]
                 )
             )
         );
+
         return [
             Constant::CONNECTION => strtolower($connection),
             Constant::DB_EXECUTION_PLAN_TABLE => strtolower($table),
