@@ -315,7 +315,7 @@ class BaseModel extends Model
      * @param string|array $table 表
      * @return array
      */
-    public static function handleDbConfig(string|array $connection, string|array $table)
+    public static function handleDbConfig(string|array $connection=null, string|array $table=null)
     {
         $separator = '_';
         $connection = implode($separator, array_filter(

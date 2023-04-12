@@ -597,12 +597,12 @@ trait BaseDb
     }
 
     /**
-     *
      * 处理数据库配置
-     * @param array $parameters 数据库连接 默认：default
+     * @param string|array $connection
+     * @param string|array $table
      * @return array
      */
-    public static function handleDbConfig(string|array $connection, string|array $table): array
+    public static function handleDbConfig(string|array $connection=null, string|array $table=null): array
     {
         return call([static::getModelAlias(), 'handleDbConfig'], [$connection, $table]);
     }
