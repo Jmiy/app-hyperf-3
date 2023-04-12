@@ -321,9 +321,9 @@ class BaseModel extends Model
         $connection = implode($separator, array_filter(
                 Arr::collapse(
                     [
-                        [trim(static::CONNECTION_PREFIX, $separator)],
+                        [static::CONNECTION_PREFIX ? trim(static::CONNECTION_PREFIX, $separator) : static::CONNECTION_PREFIX],
                         (is_array($connection) ? $connection : [$connection]),
-                        [trim(static::CONNECTION_SUFFIX, $separator)],
+                        [static::CONNECTION_SUFFIX ? trim(static::CONNECTION_SUFFIX, $separator) : static::CONNECTION_SUFFIX],
                     ]
                 )
             )
@@ -332,9 +332,9 @@ class BaseModel extends Model
         $table = implode($separator, array_filter(
                 Arr::collapse(
                     [
-                        [trim(static::TABLE_PREFIX, $separator)],
+                        [static::TABLE_PREFIX ? trim(static::TABLE_PREFIX, $separator) : static::TABLE_PREFIX],
                         (is_array($table) ? $table : [$table]),
-                        [trim(static::TABLE_SUFFIX, $separator)],
+                        [static::TABLE_SUFFIX ? trim(static::TABLE_SUFFIX, $separator) : static::TABLE_SUFFIX],
                     ]
                 )
             )

@@ -58,16 +58,20 @@ trait BaseDb
 
     /**
      * 获取模型 model
-     * @param string|null $connection 数据库连接 默认：default
-     * @param string|null $table 表名 默认使用model配置的表名
+     * @param string|array|null $connection 数据库连接 默认：default
+     * @param string|array|null $table 表名 默认使用model配置的表名
      * @param array|null $parameters model初始化参数
      * @param string|null $make model别名 默认:null
      * @param Relation|null $relation 关联对象
      * @param array|null $dbConfig 数据库配置
      * @return BaseModel|Relation|string|null
      */
-    public static function getModel(?string $connection = Constant::DB_CONNECTION_DEFAULT, ?string $table = null, ?array $parameters = [], ?string $make = null, ?Relation &$relation = null, ?array $dbConfig = [])
+    public static function getModel(string|array $connection = Constant::DB_CONNECTION_DEFAULT, string|array $table = null, ?array $parameters = [], ?string $make = null, ?Relation &$relation = null, ?array $dbConfig = [])
     {
+        $baseConfig = static::handleDbConfig($connection, $table);
+        $connection = data_get($baseConfig, Constant::CONNECTION);
+        $table = data_get($baseConfig, Constant::DB_EXECUTION_PLAN_TABLE);
+
         $dbConfig = [
             'database' => $connection,
         ];
@@ -682,8 +686,8 @@ trait BaseDb
     public static function getCurrentModel(string|array $connection, string|array $table)
     {
         $baseConfig = static::handleParameters($connection, $table);
-        $connection = data_get($baseConfig, Constant::CONNECTION);
-        $table = data_get($baseConfig, Constant::DB_EXECUTION_PLAN_TABLE);
+//        $connection = data_get($baseConfig, Constant::CONNECTION);
+//        $table = data_get($baseConfig, Constant::DB_EXECUTION_PLAN_TABLE);
 
         $retry = 0;
         beginning:
@@ -807,8 +811,8 @@ trait BaseDb
     public static function insertData(string|array $connection, string|array $table, array $data, ?bool $isGetId = false)
     {
         $baseConfig = static::handleParameters($connection, $table);
-        $connection = data_get($baseConfig, Constant::CONNECTION);
-        $table = data_get($baseConfig, Constant::DB_EXECUTION_PLAN_TABLE);
+//        $connection = data_get($baseConfig, Constant::CONNECTION);
+//        $table = data_get($baseConfig, Constant::DB_EXECUTION_PLAN_TABLE);
 
         return static::insert($data, $isGetId, $connection, $table);
     }
@@ -824,8 +828,8 @@ trait BaseDb
     public static function updateData(string|array $connection, string|array $table, string|array $where, array $data, ?array $handleData = [])
     {
         $baseConfig = static::handleParameters($connection, $table);
-        $connection = data_get($baseConfig, Constant::CONNECTION);
-        $table = data_get($baseConfig, Constant::DB_EXECUTION_PLAN_TABLE);
+//        $connection = data_get($baseConfig, Constant::CONNECTION);
+//        $table = data_get($baseConfig, Constant::DB_EXECUTION_PLAN_TABLE);
 
         return static::update($where, $data, $handleData, $connection, $table);
     }
@@ -840,8 +844,8 @@ trait BaseDb
     public static function deleteData(string|array $connection, string|array $table, string|array $where, ?array $handleData = [])
     {
         $baseConfig = static::handleParameters($connection, $table);
-        $connection = data_get($baseConfig, Constant::CONNECTION);
-        $table = data_get($baseConfig, Constant::DB_EXECUTION_PLAN_TABLE);
+//        $connection = data_get($baseConfig, Constant::CONNECTION);
+//        $table = data_get($baseConfig, Constant::DB_EXECUTION_PLAN_TABLE);
 
         return static::delete($where, $handleData, $connection, $table); //逻辑删除
     }
@@ -862,8 +866,8 @@ trait BaseDb
     public static function updateOrCreateData(string|array $connection, string|array $table, string|array $where, array $data, ?array $handleData = [])
     {
         $baseConfig = static::handleParameters($connection, $table);
-        $connection = data_get($baseConfig, Constant::CONNECTION);
-        $table = data_get($baseConfig, Constant::DB_EXECUTION_PLAN_TABLE);
+//        $connection = data_get($baseConfig, Constant::CONNECTION);
+//        $table = data_get($baseConfig, Constant::DB_EXECUTION_PLAN_TABLE);
 
         return static::updateOrCreate($where, $data, $handleData, $connection, $table); //更新或者新增记录
     }
