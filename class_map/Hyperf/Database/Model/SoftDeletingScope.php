@@ -48,7 +48,7 @@ class SoftDeletingScope implements Scope
 
             $model = $builder->getModel();
             $data = [
-                $column => Db::raw($this->getKeyName()),//设置为无效
+                $column => Db::raw($model->getKeyName()),//设置为无效
             ];
             if ($model->getDeletedTimeColumn()) {
                 $data[$model->getDeletedTimeColumn()] = $model->getDateTime($model->freshTimestamp(), $model::DELETED_AT_DATE_FORMAT);
