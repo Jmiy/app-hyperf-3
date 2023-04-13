@@ -9,7 +9,10 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace Hyperf\Database\Model;
+
+use Hyperf\DbConnection\Db;
 
 class SoftDeletingScope implements Scope
 {
@@ -45,7 +48,7 @@ class SoftDeletingScope implements Scope
 
             $model = $builder->getModel();
             $data = [
-                $column => $model::NO_EFFECTIVE,//设置为无效
+                $column => Db::raw($this->getKeyName()),//设置为无效
             ];
             if ($model->getDeletedTimeColumn()) {
                 $data[$model->getDeletedTimeColumn()] = $model->getDateTime($model->freshTimestamp(), $model::DELETED_AT_DATE_FORMAT);
@@ -63,7 +66,7 @@ class SoftDeletingScope implements Scope
      */
     protected function getDeletedAtColumn(Builder $builder)
     {
-        if (count((array) $builder->getQuery()->joins) > 0) {
+        if (count((array)$builder->getQuery()->joins) > 0) {
             return $builder->getModel()->getQualifiedDeletedAtColumn($builder);
         }
 
@@ -100,7 +103,7 @@ class SoftDeletingScope implements Scope
     protected function addWithTrashed(Builder $builder)
     {
         $builder->macro('withTrashed', function (Builder $builder, $withTrashed = true) {
-            if (! $withTrashed) {
+            if (!$withTrashed) {
                 return $builder->withoutTrashed();
             }
 
@@ -137,7 +140,7 @@ class SoftDeletingScope implements Scope
             $model = $builder->getModel();
 
             $builder->withoutGlobalScope($this)->where(
-                $model->getQualifiedDeletedAtColumn($builder), '=', $model::NO_EFFECTIVE
+                $model->getQualifiedDeletedAtColumn($builder), '!=', $model::EFFECTIVE
             );
 
             return $builder;

@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Hyperf\Database\Model;
 
+use Hyperf\DbConnection\Db;
 use Psr\EventDispatcher\StoppableEventInterface;
-use Psr\Log\NullLogger;
 
 /**
  * @method static static|\Hyperf\Database\Model\Builder|\Hyperf\Database\Query\Builder withTrashed(bool $withTrashed = true)
@@ -118,7 +118,7 @@ trait SoftDeletes
      */
     public function trashed()
     {
-        return static::NO_EFFECTIVE == $this->{$this->getDeletedAtColumn()};
+        return static::EFFECTIVE != $this->{$this->getDeletedAtColumn()};
     }
 
     /**
@@ -197,8 +197,8 @@ trait SoftDeletes
 
         $columns = [];
         if ($this->getDeletedAtColumn()) {
-            $columns[$this->getDeletedAtColumn()] = static::NO_EFFECTIVE;//设置为无效
-            $this->{$this->getDeletedAtColumn()} = static::NO_EFFECTIVE;//设置为无效
+            $columns[$this->getDeletedAtColumn()] = Db::raw($this->getKeyName());//设置为无效
+            $this->{$this->getDeletedAtColumn()} = $this->getKey();//设置为无效
         }
 
         //更新删除时间
