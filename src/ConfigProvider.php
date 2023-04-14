@@ -22,6 +22,7 @@ use Hyperf\Database\Model\SoftDeletingScope;
 use Hyperf\Database\Model\Relations\HasManyThrough;
 use Hyperf\AsyncQueue\Driver\Driver;
 use Hyperf\Utils\Coroutine\Concurrent;
+use Hyperf\RateLimit\Aspect\RateLimitAnnotationAspect;
 
 class ConfigProvider
 {
@@ -60,6 +61,7 @@ class ConfigProvider
                         Driver::class => __DIR__ . '/../class_map/Hyperf/AsyncQueue/Driver/Driver.php',
 
                         Concurrent::class => __DIR__ . '/../class_map/Hyperf/Utils/Coroutine/Concurrent.php',
+                        RateLimitAnnotationAspect::class => __DIR__ . '/../class_map/Hyperf/RateLimit/Aspect/RateLimitAnnotationAspect.php',
                     ],
                 ],
             ],
