@@ -11,10 +11,10 @@ namespace Business\Hyperf\Service\Traits;
 
 use Business\Hyperf\Constants\Constant;
 use Business\Hyperf\Exception\Handler\AppExceptionHandler;
+use Business\Hyperf\Utils\Arrays\MyArr;
 use Business\Hyperf\Utils\Support\Facades\HttpClient;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\RequestOptions;
-use Hyperf\Guzzle\RetryMiddleware;
 use Hyperf\Utils\Arr;
 
 trait BaseClient
@@ -144,6 +144,28 @@ trait BaseClient
 //            Constant::REQUEST_HEADERS => $headers,//请求头
             Constant::REQUEST_BODY => $options,//请求body
         ];
+
+        //返回上传文件的元数据
+        foreach ($responseData as $key => $value) {
+
+            if ($key != Constant::REQUEST_BODY) {
+                continue;
+            }
+
+            foreach ($value as $_key => $_value) {
+                if ($_key == RequestOptions::MULTIPART) {
+                    if (MyArr::isIndexedArray($_value) && is_array(Arr::first($_value))) {
+                        foreach ($_value as $index => $item) {
+                            foreach ($item as $__key => $v) {
+                                if (is_resource($v)) {
+                                    $responseData[$key][$_key][$index][$__key] = stream_get_meta_data($v);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         $response = null;
         try {
