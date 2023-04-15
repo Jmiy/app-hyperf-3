@@ -97,7 +97,9 @@ class RateLimitAnnotationAspect implements AroundInterface
         $rateLimitConfig = data_get($proceedingJoinPoint->arguments, 'keys.extendData.rate_limit');
         if ($rateLimitConfig !== null) {
             $rateLimitConfig = is_array($rateLimitConfig) ? $rateLimitConfig : config($rateLimitConfig);
-            $property = array_merge($property, array_filter($rateLimitConfig));
+            if ($rateLimitConfig) {
+                $property = array_merge($property, array_filter($rateLimitConfig));
+            }
         }
 
         return tap(new RateLimit(), static function (RateLimit $rateLimit) use ($property) {
