@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace Hyperf\RateLimit\Aspect;
 
 use bandwidthThrottle\tokenBucket\storage\StorageException;
@@ -45,13 +46,13 @@ class RateLimitAnnotationAspect implements AroundInterface
      */
     public function process(ProceedingJoinPoint $proceedingJoinPoint)
     {
-        $annotation = $this->getWeightingAnnotation($this->getAnnotations($proceedingJoinPoint),$proceedingJoinPoint);
+        $annotation = $this->getWeightingAnnotation($this->getAnnotations($proceedingJoinPoint), $proceedingJoinPoint);
 
         $bucketKey = $annotation->key;
         if (is_callable($bucketKey)) {
             $bucketKey = $bucketKey($proceedingJoinPoint);
         }
-        if (! $bucketKey) {
+        if (!$bucketKey) {
             $bucketKey = $this->request->getUri()->getPath();
         }
 
@@ -73,7 +74,7 @@ class RateLimitAnnotationAspect implements AroundInterface
             Coroutine::sleep(max($seconds, 0.001));
         }
 
-        if (! $annotation->limitCallback || ! is_callable($annotation->limitCallback)) {
+        if (!$annotation->limitCallback || !is_callable($annotation->limitCallback)) {
             throw new RateLimitException('Service Unavailable.', 503);
         }
         return call_user_func($annotation->limitCallback, $seconds, $proceedingJoinPoint);
@@ -87,7 +88,7 @@ class RateLimitAnnotationAspect implements AroundInterface
         $property = array_merge($this->annotationProperty, $this->config);
         /** @var null|RateLimit $annotation */
         foreach ($annotations as $annotation) {
-            if (! $annotation) {
+            if (!$annotation) {
                 continue;
             }
             $property = array_merge($property, array_filter(get_object_vars($annotation)));
@@ -98,8 +99,6 @@ class RateLimitAnnotationAspect implements AroundInterface
             $rateLimitConfig = is_array($rateLimitConfig) ? $rateLimitConfig : config($rateLimitConfig);
             $property = array_merge($property, array_filter($rateLimitConfig));
         }
-
-        var_dump($property);
 
         return tap(new RateLimit(), static function (RateLimit $rateLimit) use ($property) {
             foreach ($property as $key => $value) {
