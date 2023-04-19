@@ -23,6 +23,7 @@ use Hyperf\Database\Model\Relations\HasManyThrough;
 use Hyperf\AsyncQueue\Driver\Driver;
 use Hyperf\Utils\Coroutine\Concurrent;
 use Hyperf\RateLimit\Aspect\RateLimitAnnotationAspect;
+use Hyperf\ServiceGovernanceNacos\NacosDriver;
 
 class ConfigProvider
 {
@@ -62,6 +63,7 @@ class ConfigProvider
 
                         Concurrent::class => __DIR__ . '/../class_map/Hyperf/Utils/Coroutine/Concurrent.php',
                         RateLimitAnnotationAspect::class => __DIR__ . '/../class_map/Hyperf/RateLimit/Aspect/RateLimitAnnotationAspect.php',
+                        NacosDriver::class => __DIR__ . '/../class_map/Hyperf/ServiceGovernanceNacos/NacosDriver.php',
                     ],
                 ],
             ],
