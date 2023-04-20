@@ -50,7 +50,10 @@ class NacosDriver implements DriverInterface
     public function getNodes(string $uri, string $name, array $metadata): array
     {
         $baseUri = $this->client->getConfig()->getBaseUri();
-        $this->client->getConfig()->baseUri = ($this->config->get('services.consumers.' . $name . '.registry.address'));
+        $address = $this->config->get('services.consumers.' . $name . '.registry.address');
+        if($address){
+            $this->client->getConfig()->baseUri = ($this->config->get('services.consumers.' . $name . '.registry.address'));
+        }
 
         try {
             $response = $this->client->instance->list($name, [
@@ -59,10 +62,12 @@ class NacosDriver implements DriverInterface
                 'groupName' => $this->config->get('services.consumers.' . $name . '.registry.group_name', $this->config->get('services.drivers.nacos.group_name')),
                 'namespaceId' => $this->config->get('services.consumers.' . $name . '.registry.namespace_id', $this->config->get('services.drivers.nacos.namespace_id')),
             ]);
-            $this->client->getConfig()->baseUri = $baseUri;
         } catch (\Throwable $throwable) {
-            $this->client->getConfig()->baseUri = $baseUri;
             throw $throwable;
+        } finally {
+            if ($address) {
+                $this->client->getConfig()->baseUri = $baseUri;
+            }
         }
 
         if ($response->getStatusCode() !== 200) {
