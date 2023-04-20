@@ -49,12 +49,22 @@ class NacosDriver implements DriverInterface
 
     public function getNodes(string $uri, string $name, array $metadata): array
     {
-        $response = $this->client->instance->list($name, [
+        $baseUri = $this->client->getConfig()->getBaseUri();
+        $this->client->getConfig()->baseUri = ($this->config->get('services.consumers.' . $name . '.registry.address'));
+
+        try {
+            $response = $this->client->instance->list($name, [
 //            'groupName' => $this->config->get('services.drivers.nacos.group_name'),
 //            'namespaceId' => $this->config->get('services.drivers.nacos.namespace_id'),
-            'groupName' => $this->config->get('services.consumers.' . $name . '.registry.group_name', $this->config->get('services.drivers.nacos.group_name')),
-            'namespaceId' => $this->config->get('services.consumers.' . $name . '.registry.namespace_id', $this->config->get('services.drivers.nacos.namespace_id')),
-        ]);
+                'groupName' => $this->config->get('services.consumers.' . $name . '.registry.group_name', $this->config->get('services.drivers.nacos.group_name')),
+                'namespaceId' => $this->config->get('services.consumers.' . $name . '.registry.namespace_id', $this->config->get('services.drivers.nacos.namespace_id')),
+            ]);
+            $this->client->getConfig()->baseUri = $baseUri;
+        } catch (\Throwable $throwable) {
+            $this->client->getConfig()->baseUri = $baseUri;
+            throw $throwable;
+        }
+
         if ($response->getStatusCode() !== 200) {
             throw new RequestException((string) $response->getBody(), $response->getStatusCode());
         }
