@@ -24,9 +24,6 @@ use Hyperf\Context\ApplicationContext;
 use Hyperf\Engine\Coroutine as Co;
 use Throwable;
 
-/**
- * @Aspect
- */
 #[Aspect(classes: [CoroutineCoroutine::class . '::create', CoroutineCoroutine::class . '::printLog'], annotations: [])]
 class Coroutine extends AbstractAspect
 {
