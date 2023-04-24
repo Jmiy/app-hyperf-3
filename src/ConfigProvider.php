@@ -27,6 +27,8 @@ use Hyperf\ServiceGovernanceNacos\NacosDriver;
 use Hyperf\ServiceGovernanceNacos\Client as ServiceGovernanceNacosClient;
 use Hyperf\Nacos\Config;
 
+use Hyperf\Coroutine\Concurrent as CoroutineConcurrent;
+
 class ConfigProvider
 {
     public function __invoke(): array
@@ -64,6 +66,8 @@ class ConfigProvider
                         Driver::class => __DIR__ . '/../class_map/Hyperf/AsyncQueue/Driver/Driver.php',
 
                         Concurrent::class => __DIR__ . '/../class_map/Hyperf/Utils/Coroutine/Concurrent.php',
+                        CoroutineConcurrent::class => __DIR__ . '/../class_map/Hyperf/Coroutine/Concurrent.php',
+
                         RateLimitAnnotationAspect::class => __DIR__ . '/../class_map/Hyperf/RateLimit/Aspect/RateLimitAnnotationAspect.php',
                         NacosDriver::class => __DIR__ . '/../class_map/Hyperf/ServiceGovernanceNacos/NacosDriver.php',
                         ServiceGovernanceNacosClient::class => __DIR__ . '/../class_map/Hyperf/ServiceGovernanceNacos/Client.php',
