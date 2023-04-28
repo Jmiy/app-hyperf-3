@@ -18,6 +18,8 @@ use Hyperf\Nacos\Protobuf\ListenHandler\ConfigChangeNotifyRequestHandler;
 use Hyperf\Nacos\Protobuf\Response\ConfigQueryResponse;
 use Psr\Container\ContainerInterface;
 
+use Hyperf\ConfigCenter\Mode;
+
 class NacosDriver extends AbstractDriver
 {
     protected string $driverName = 'nacos';
@@ -50,18 +52,22 @@ class NacosDriver extends AbstractDriver
 
             $client = $application->grpc->get($tenant);
             $client->listenConfig($group, $dataId, new ConfigChangeNotifyRequestHandler(function (ConfigQueryResponse $response) use ($key, $type) {
+//                $this->updateConfig([
+//                    $key => $this->client->decode($response->getContent(), $type),
+//                ]);
 
-                $config = $this->client->decode($response->getContent(), $type);
-                $prevConfig = $this->config->get($key, []);
+                $config = [
+                    $key => $this->client->decode($response->getContent(), $type),
+                ];
+                $prevConfig = [$key => $this->config->get($key, [])];
 
-                $this->updateConfig([
-                    $key => $config,
-                ]);
+                $this->updateConfig($config);
 
-
-                if ($config !== $prevConfig) {
-                    $this->syncConfig([$key => $config], [$key => $prevConfig]);
+                $mode = strtolower($this->config->get('config_center.mode', Mode::PROCESS));
+                if ($mode === Mode::PROCESS && $config !== $prevConfig) {
+                    $this->syncConfig($config, $prevConfig);
                 }
+
             }));
         }
 
