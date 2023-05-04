@@ -19,7 +19,8 @@
             "Business\\Hyperf\\":"src/"
         },
         "files": [
-            "src/Functions.php"
+            "src/Functions.php",
+            "src/Utils/Collection/Functions.php"
         ]
     },
     "description": "",
