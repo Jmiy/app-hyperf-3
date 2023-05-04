@@ -502,6 +502,45 @@ trait BaseDb
     }
 
     /**
+     * 验证表是否存在，返回false则表不存在
+     * @param string|ConnectionInterface $connection 数据库连接
+     * @param array $tableName ['要创建的表名'=>'模板表名'] 如:['pt_ali_online_products_last' => 'pt_ali_online_products',]
+     * @return bool
+     * @throws \Throwable
+     */
+    public static function existsTable(string|ConnectionInterface $connection = Constant::DB_CONNECTION_DEFAULT, string $tableName = ''): bool
+    {
+        if (empty($tableName)) {
+            return false;
+        }
+
+        $tableSql = "SHOW TABLES LIKE '{tableName}'";
+        $dbConnection = ($connection instanceof ConnectionInterface) ? $connection : Db::connection($connection);
+        $trans = [
+            '{tableName}' => $tableName,
+        ];
+
+        $retry = 0;
+        beginning:
+        try {
+            $result = $dbConnection->select(strtr($tableSql, $trans));
+            if(empty($result)) {
+                return false;
+            }
+        } catch (\Throwable $throwable) {
+
+            if ($retry < 10) {
+                $retry = $retry + 1;
+                Coroutine::sleep(rand(2, 5));
+                goto beginning;
+            }
+
+            throw $throwable;
+        }
+        return true;
+    }
+
+    /**
      * 创建表
      * @param string|ConnectionInterface $connection 数据库连接
      * @param array $tableData ['要创建的表名'=>'模板表名'] 如:['pt_ali_online_products_last' => 'pt_ali_online_products',]
@@ -535,6 +574,8 @@ trait BaseDb
             } catch (\Throwable $throwable) {
 
                 if ($retry < 10) {
+                    //创建失败时删除 后再创建
+                    $dbConnection->statement(strtr($dropTableSql, $trans));
                     $retry = $retry + 1;
                     Coroutine::sleep(rand(2, 5));
                     goto beginning;
