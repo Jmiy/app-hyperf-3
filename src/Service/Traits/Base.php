@@ -119,4 +119,60 @@ trait Base
         return $appEnv === null ? $connection : ($appEnv . '_' . $connection);
     }
 
+    /**
+     * 构建批量数据
+     * @param array $data 待处理的数据 如:['id'=>[[],[]...]]
+     * @param int|null $limit 每批数据总数
+     * @return array
+     */
+    public static function buildBatchData(array $data, ?int $limit = 50): array
+    {
+        $__data = [];//
+        $countData = [];
+        foreach ($data as $messageId => $_data) {
+            $messageCount = count($_data);
+            if ($messageCount >= $limit) {
+                $__data[] = $_data;
+                unset($data[$messageId]);
+            }
+            $countData[$messageId . '_index'] = count($_data);
+        }
+
+        // 从原始数组中提取值，并保存键
+        $values = array_values($countData);
+
+        // 使用 array_multisort() 函数对值进行排序
+        // SORT_DESC 表示倒序排序
+        array_multisort($values, SORT_DESC, $countData);
+
+        $index = $__data ? count($__data) - 1 : 0;
+        $_limit = 0;
+        $__data[$index] = [];
+
+        beginning:
+
+        $i = count($countData);
+        foreach ($countData as $_messageId => $__limit) {
+
+            $messageId = Arr::first(explode('_', $_messageId));
+
+            $i = $i - 1;
+            if ($_limit + $__limit <= $limit) {
+                $__data[$index] = Arr::collapse([$__data[$index], $data[$messageId]]);
+                unset($data[$messageId]);
+                unset($countData[$_messageId]);
+                $_limit += $__limit;
+            }
+
+            if (($i <= 0 && count($data) > 0) || ($_limit == $limit)) {
+                $_limit = 0;
+                $index += 1;
+                $__data[$index] = [];
+                goto beginning;
+            }
+        }
+
+        return $__data;
+    }
+
 }
