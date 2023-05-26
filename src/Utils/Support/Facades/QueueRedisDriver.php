@@ -247,7 +247,7 @@ class QueueRedisDriver
         $redis = Redis::getRedis($poolName);
         if ($expired = $redis->zrevrangebyscore($from, (string)$now, '-inf', $options)) {
             foreach ($expired as $job) {
-                if ($redis->zRem($from, $job) > 0) {
+                if ($redis->zRem($from, $job) > 0 && !empty($to)) {
                     $redis->lPush($to, $job);
                 }
             }

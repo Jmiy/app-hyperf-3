@@ -158,4 +158,67 @@ class Redis
         ];
     }
 
+    /**
+     * Adds the specified member with a given score to the sorted set stored at key
+     *
+     * @param string       $key     Required key
+     * @param array        $options Options if needed
+     * @param float        $score1  Required score
+     * @param string|mixed $value1  Required value
+     * @param float        $score2  Optional score
+     * @param string|mixed $value2  Optional value
+     * @param float        $scoreN  Optional score
+     * @param string|mixed $valueN  Optional value
+     *
+     * @return int Number of values added
+     *
+     * @link    https://redis.io/commands/zadd
+     * @example
+     * <pre>
+     * <pre>
+     * $redis->zAdd('z', 1, 'v1', 2, 'v2', 3, 'v3', 4, 'v4' );  // int(2)
+     * $redis->zRem('z', 'v2', 'v3');                           // int(2)
+     * $redis->zAdd('z', ['NX'], 5, 'v5');                      // int(1)
+     * $redis->zAdd('z', ['NX'], 6, 'v5');                      // int(0)
+     * $redis->zAdd('z', 7, 'v6');                              // int(1)
+     * $redis->zAdd('z', 8, 'v6');                              // int(0)
+     *
+     * var_dump( $redis->zRange('z', 0, -1) );
+     * // Output:
+     * // array(4) {
+     * //   [0]=> string(2) "v1"
+     * //   [1]=> string(2) "v4"
+     * //   [2]=> string(2) "v5"
+     * //   [3]=> string(2) "v8"
+     * // }
+     *
+     * var_dump( $redis->zRange('z', 0, -1, true) );
+     * // Output:
+     * // array(4) {
+     * //   ["v1"]=> float(1)
+     * //   ["v4"]=> float(4)
+     * //   ["v5"]=> float(5)
+     * //   ["v6"]=> float(8)
+     * </pre>
+     * </pre>
+     */
+    public static function zAdd($key, array $value, int $seconds = null, string $poolName = 'default')
+    {
+        $instance = static::getRedis($poolName);
+
+        if ($seconds === null) {
+            return $instance->zAdd($key, ...$value);
+        }
+
+        $instance->multi();
+        $instance->zAdd($key, ...$value);
+        $instance->pexpire($key, $seconds * 1000);
+        $manyResult = $instance->exec();
+
+        return [
+            'result' => data_get($manyResult, 0),
+            'pexpire' => data_get($manyResult, 1),
+        ];
+    }
+
 }
