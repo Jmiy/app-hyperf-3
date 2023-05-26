@@ -654,6 +654,9 @@ class Constant
 
     public const OPERATION_TIMED_OUT = 'Operation timed out';
 
+    public const QUEUE = 'queue';//消息队列
+    public const POOL_NAME = 'poolName';//连接池
+
     //Shopee
     public const QUEUE_SHOPEE = 'queue_shopee';//shopee消息队列
     public const QUEUE_SHOPEE_BASE = 'queue_shopee_base';//shopee平台listing基础消息队列

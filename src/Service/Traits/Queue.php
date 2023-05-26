@@ -9,16 +9,9 @@
 
 namespace Business\Hyperf\Service\Traits;
 
-use Business\Hyperf\Utils\Support\Facades\Cache;
-use Business\Hyperf\Utils\Support\Facades\Redis;
 use Hyperf\Utils\Arr;
 use Business\Hyperf\Constants\Constant;
-use Hyperf\Cache\CacheManager;
-use Hyperf\Cache\Listener\DeleteListenerEvent;
-use Hyperf\Cache\Annotation\Cacheable;
 use Hyperf\Utils\Coroutine;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Hyperf\Cache\Driver\RedisDriver;
 
 trait Queue
 {
@@ -72,6 +65,20 @@ trait Queue
         }
 
         return $isPush;
+    }
+
+    /**
+     * 获取队列基本数据
+     * @return string
+     */
+    public static function getQueueData($queue = Constant::QUEUE_EBAY)
+    {
+        $poolName = config('async_queue.' . $queue . '.redis.pool');
+
+        return [
+            Constant::QUEUE => $queue,
+            Constant::POOL_NAME => $poolName,
+        ];
     }
 
 }
