@@ -70,12 +70,12 @@ if (!function_exists('getJobData')) {
      * 获取 job 执行配置数据
      * @param \Closure|object|string|func|mixed $callback
      * @param string $method
-     * @param array $parameters
+     * @param mixed $parameters
      * @param null|array $request
      * @param array $extData
      * @return array
      */
-    function getJobData($callback, string $method = '', array $parameters = [], $request = null, array $extData = [])
+    function getJobData($callback, string $method = '', array $parameters = [], mixed $request = null, mixed $extData = [])
     {
         return Arr::collapse([
             [
