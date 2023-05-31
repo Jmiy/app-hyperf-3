@@ -75,7 +75,7 @@ if (!function_exists('getJobData')) {
      * @param array $extData
      * @return array
      */
-    function getJobData($callback, string $method = '', array $parameters = [], mixed $request = null, mixed $extData = [])
+    function getJobData($callback, string $method = '', mixed $parameters = [], mixed $request = null, mixed $extData = [])
     {
         return Arr::collapse([
             [
