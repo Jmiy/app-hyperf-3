@@ -317,8 +317,9 @@ if (!function_exists('getClientIP')) {
                 'x-cluster-client-ip',
             ];
 
-            $clientIP = '127.0.0.0';
-            $requestHeaders = Context::get(ServerRequestInterface::class)->getHeaders();
+            $clientIP = '';
+            $request = Context::get(ServerRequestInterface::class);
+            $requestHeaders = $request->getHeaders();
             //var_dump(__METHOD__, $requestHeaders);
             foreach ($remotes_keys as $key) {
                 $address = data_get($requestHeaders, strtolower($key));
@@ -330,9 +331,26 @@ if (!function_exists('getClientIP')) {
 
                 foreach ($address as $_address) {
                     $ipData = explode(',', $_address);
-                    foreach ($ipData as $clientIP) {
-                        if (isValidIp($clientIP)) {
-                            return $clientIP;
+                    foreach ($ipData as $_clientIP) {
+                        if (isValidIp($_clientIP)) {
+                            return $_clientIP;
+                        }
+                    }
+                }
+            }
+
+            if (empty($clientIP)) {
+                $requestServer = $request->getServerParams();
+                $address = data_get($requestServer, 'remote_addr');
+                if ($address) {
+                    $address = is_array($address) ? $address : [$address];
+
+                    foreach ($address as $_address) {
+                        $ipData = explode(',', $_address);
+                        foreach ($ipData as $clientIP) {
+                            if (isValidIp($clientIP)) {
+                                return $clientIP;
+                            }
                         }
                     }
                 }
