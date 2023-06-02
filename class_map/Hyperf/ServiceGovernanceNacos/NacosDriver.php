@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace Hyperf\ServiceGovernanceNacos;
 
 use Hyperf\Contract\ConfigInterface;
@@ -50,15 +51,24 @@ class NacosDriver implements DriverInterface
     public function getNodes(string $uri, string $name, array $metadata): array
     {
         $baseUri = $this->client->getConfig()->getBaseUri();
+        $username = $this->client->getConfig()->getUsername();
+        $password = $this->client->getConfig()->getPassword();
+
         $address = $this->config->get('services.consumers.' . $name . '.registry.address');
-        if($address){
-            $this->client->getConfig()->baseUri = ($this->config->get('services.consumers.' . $name . '.registry.address'));
+        $consumerUsername = $this->config->get('services.consumers.' . $name . '.registry.username');
+        $consumerPassword = $this->config->get('services.consumers.' . $name . '.registry.password');
+        if ($address) {
+            $this->client->getConfig()->baseUri = $address;
+        }
+        if ($consumerUsername) {
+            $this->client->getConfig()->username = $consumerUsername;
+        }
+        if ($consumerPassword) {
+            $this->client->getConfig()->password = $consumerPassword;
         }
 
         try {
             $response = $this->client->instance->list($name, [
-//            'groupName' => $this->config->get('services.drivers.nacos.group_name'),
-//            'namespaceId' => $this->config->get('services.drivers.nacos.namespace_id'),
                 'groupName' => $this->config->get('services.consumers.' . $name . '.registry.group_name', $this->config->get('services.drivers.nacos.group_name')),
                 'namespaceId' => $this->config->get('services.consumers.' . $name . '.registry.namespace_id', $this->config->get('services.drivers.nacos.namespace_id')),
             ]);
@@ -68,13 +78,19 @@ class NacosDriver implements DriverInterface
             if ($address) {
                 $this->client->getConfig()->baseUri = $baseUri;
             }
+            if ($consumerUsername) {
+                $this->client->getConfig()->username = $username;
+            }
+            if ($consumerPassword) {
+                $this->client->getConfig()->password = $consumerPassword;
+            }
         }
 
         if ($response->getStatusCode() !== 200) {
-            throw new RequestException((string) $response->getBody(), $response->getStatusCode());
+            throw new RequestException((string)$response->getBody(), $response->getStatusCode());
         }
 
-        $data = Json::decode((string) $response->getBody());
+        $data = Json::decode((string)$response->getBody());
         $hosts = $data['hosts'] ?? [];
         $nodes = [];
         foreach ($hosts as $node) {
@@ -92,16 +108,16 @@ class NacosDriver implements DriverInterface
     public function register(string $name, string $host, int $port, array $metadata): void
     {
         $this->setMetadata($name, $metadata);
-        $ephemeral = (bool) $this->config->get('services.drivers.nacos.ephemeral');
-        if (! $ephemeral && ! array_key_exists($name, $this->serviceCreated)) {
+        $ephemeral = (bool)$this->config->get('services.drivers.nacos.ephemeral');
+        if (!$ephemeral && !array_key_exists($name, $this->serviceCreated)) {
             $response = $this->client->service->create($name, [
                 'groupName' => $this->config->get('services.drivers.nacos.group_name'),
                 'namespaceId' => $this->config->get('services.drivers.nacos.namespace_id'),
                 'metadata' => $this->getMetadata($name),
-                'protectThreshold' => (float) $this->config->get('services.drivers.nacos.protect_threshold', 0),
+                'protectThreshold' => (float)$this->config->get('services.drivers.nacos.protect_threshold', 0),
             ]);
 
-            if ($response->getStatusCode() !== 200 || (string) $response->getBody() !== 'ok') {
+            if ($response->getStatusCode() !== 200 || (string)$response->getBody() !== 'ok') {
                 throw new RequestException(sprintf('Failed to create nacos service %s , %s !', $name, $response->getBody()));
             }
 
@@ -115,7 +131,7 @@ class NacosDriver implements DriverInterface
             'ephemeral' => $ephemeral ? 'true' : 'false',
         ]);
 
-        if ($response->getStatusCode() !== 200 || (string) $response->getBody() !== 'ok') {
+        if ($response->getStatusCode() !== 200 || (string)$response->getBody() !== 'ok') {
             throw new RequestException(sprintf('Failed to create nacos instance %s:%d! for %s , %s ', $host, $port, $name, $response->getBody()));
         }
 
@@ -141,7 +157,7 @@ class NacosDriver implements DriverInterface
             return false;
         }
 
-        if (in_array($response->getStatusCode(), [400, 500], true) && strpos((string) $response->getBody(), 'not found') > 0) {
+        if (in_array($response->getStatusCode(), [400, 500], true) && strpos((string)$response->getBody(), 'not found') > 0) {
             return false;
         }
 
@@ -183,7 +199,7 @@ class NacosDriver implements DriverInterface
                 'no ips found',
                 'no matched ip',
             ];
-            $body = (string) $response->getBody();
+            $body = (string)$response->getBody();
             foreach ($messages as $message) {
                 if (str_contains($body, $message)) {
                     return true;
@@ -241,12 +257,12 @@ class NacosDriver implements DriverInterface
                             $lightBeatEnabled
                         );
 
-                        $result = Json::decode((string) $response->getBody());
+                        $result = Json::decode((string)$response->getBody());
 
                         if ($response->getStatusCode() === 200) {
                             $this->logger->debug(sprintf('Instance %s:%d heartbeat successfully, result code:%s', $host, $port, $result['code']));
                         } else {
-                            $this->logger->error(sprintf('Instance %s:%d heartbeat failed! %s', $host, $port, (string) $response->getBody()));
+                            $this->logger->error(sprintf('Instance %s:%d heartbeat failed! %s', $host, $port, (string)$response->getBody()));
                             continue;
                         }
 
