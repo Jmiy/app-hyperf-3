@@ -82,7 +82,7 @@ class NacosDriver implements DriverInterface
                 $this->client->getConfig()->username = $username;
             }
             if ($consumerPassword) {
-                $this->client->getConfig()->password = $consumerPassword;
+                $this->client->getConfig()->password = $password;
             }
         }
 
