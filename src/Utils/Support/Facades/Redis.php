@@ -221,4 +221,42 @@ class Redis
         ];
     }
 
+    /**
+     * Increment the number stored at key by one.
+     * If the second argument is filled, it will be used as the integer value of the increment.
+     *
+     * @param string $key   key
+     * @param int    $value value that will be added to key (only for incrBy)
+     *
+     * @return int the new value
+     *
+     * @link    https://redis.io/commands/incrby
+     * @example
+     * <pre>
+     * $redis->incr('key1');        // key1 didn't exists, set to 0 before the increment and now has the value 1
+     * $redis->incr('key1');        // 2
+     * $redis->incr('key1');        // 3
+     * $redis->incr('key1');        // 4
+     * $redis->incrBy('key1', 10);  // 14
+     * </pre>
+     */
+    public static function incrBy($key, $value, int $seconds = null, string $poolName = 'default')
+    {
+        $instance = static::getRedis($poolName);
+
+        if ($seconds === null) {
+            return $instance->incrBy($key, $value);
+        }
+
+        $instance->multi();
+        $instance->incrBy($key, $value);
+        $instance->pexpire($key, $seconds * 1000);
+        $manyResult = $instance->exec();
+
+        return [
+            'result' => data_get($manyResult, 0),
+            'pexpire' => data_get($manyResult, 1),
+        ];
+    }
+
 }
