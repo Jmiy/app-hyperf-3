@@ -315,10 +315,10 @@ class BaseModel extends Model
      * @param string|array $table 表
      * @return array
      */
-    public static function handleDbConfig(string|array $connection=null, string|array $table=null)
+    public static function handleDbConfig(string|array $connection = null, string|array $table = null)
     {
         $separator = '_';
-        $connection = implode($separator, array_filter(
+        $connection = strtolower(implode($separator, array_filter(
                 Arr::collapse(
                     [
                         [static::CONNECTION_PREFIX ? trim(static::CONNECTION_PREFIX, $separator) : static::CONNECTION_PREFIX],
@@ -327,22 +327,35 @@ class BaseModel extends Model
                     ]
                 )
             )
-        );
+        ));
 
-        $table = implode($separator, array_filter(
-                Arr::collapse(
-                    [
-                        [static::TABLE_PREFIX ? trim(static::TABLE_PREFIX, $separator) : static::TABLE_PREFIX],
-                        (is_array($table) ? $table : [$table]),
-                        [static::TABLE_SUFFIX ? trim(static::TABLE_SUFFIX, $separator) : static::TABLE_SUFFIX],
-                    ]
+        if (isset($table['table']) && $table['table']) {
+            $table = implode('', array_filter(
+                    Arr::collapse(
+                        [
+                            [($table['prefix'] ?? config('databases.' . $connection . '.prefix'))],
+                            (is_array($table['table']) ? $table['table'] : [$table['table']]),
+                        ]
+                    )
                 )
-            )
-        );
+            );
+        } else {
+            $table = strtolower(implode($separator, array_filter(
+                    Arr::collapse(
+                        [
+                            [static::TABLE_PREFIX ? trim(static::TABLE_PREFIX, $separator) : static::TABLE_PREFIX],
+                            (is_array($table) ? $table : [$table]),
+                            [static::TABLE_SUFFIX ? trim(static::TABLE_SUFFIX, $separator) : static::TABLE_SUFFIX],
+                        ]
+                    )
+                )
+            ));
+        }
+
 
         return [
-            Constant::CONNECTION => strtolower($connection),
-            Constant::DB_EXECUTION_PLAN_TABLE => strtolower($table),
+            Constant::CONNECTION => $connection,
+            Constant::DB_EXECUTION_PLAN_TABLE => $table,
         ];
     }
 

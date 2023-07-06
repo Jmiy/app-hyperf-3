@@ -20,11 +20,11 @@ trait ExistsFirst
      * @param int $customerId 会员id
      * @param array $where where条件
      * @param array $getData 是否获取记录  true:是  false:否
-     * @param string $connection 商城id
-     * @param string $table 国家
+     * @param string|array $connection 商城id
+     * @param string|array $table 国家
      * @return int|object
      */
-    public static function existsOrFirst($where = [], $getData = false, $select = null, $orders = [], ?string $connection = Constant::DB_CONNECTION_DEFAULT, ?string $table = null)
+    public static function existsOrFirst($where = [], $getData = false, $select = null, $orders = [], string|array $connection = Constant::DB_CONNECTION_DEFAULT, string|array $table = null)
     {
 
         if (empty($where)) {
