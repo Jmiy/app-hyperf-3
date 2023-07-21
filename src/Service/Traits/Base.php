@@ -29,6 +29,16 @@ trait Base
     }
 
     /**
+     * 获取当前调用的类名
+     * @return string
+     */
+    public static function getCalledClassName()
+    {
+        $class = explode('\\', get_called_class());
+        return end($class);
+    }
+
+    /**
      * 获取当前类的绝对路径
      * @return string
      */
