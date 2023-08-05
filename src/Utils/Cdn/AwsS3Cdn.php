@@ -28,7 +28,7 @@ class AwsS3Cdn extends ResourcesCdn
             $config = getConfig();
 
             //获取 disk 名称
-            $diskName = DictStoreService::getByTypeAndKey($storeId, 'filesystems.disks', 'aws', true);
+            $diskName = 's3';
             if (empty($diskName)) {
                 return [];
             }
@@ -40,13 +40,13 @@ class AwsS3Cdn extends ResourcesCdn
 //                return $configData;
 //            }
 
-            //获取driver配置
-            $diskConf = DictStoreService::getListByType($storeId, $diskName);
-            if ($diskConf->isEmpty()) {
-                return [
-                    'diskName' => $diskName,
-                ];
-            }
+//            //获取driver配置
+//            $diskConf = DictStoreService::getListByType($storeId, $diskName);
+//            if ($diskConf->isEmpty()) {
+//                return [
+//                    'diskName' => $diskName,
+//                ];
+//            }
 
             //设置配置
             //获取默认配置
@@ -67,32 +67,32 @@ class AwsS3Cdn extends ResourcesCdn
 //            ];
 
             //更新配置
-            foreach ($diskConf as $item) {
-                $key = data_get($item, 'conf_key');
-
-                if($key == 'driver'){
-                    continue;
-                }
-
-                switch ($key) {
-                    case 'key':
-                    case 'secret':
-                        $key = 'credentials.'.$key;
-
-                        break;
-
-                    case 'bucket':
-                        $key = 'bucket_name';
-
-                        break;
-
-                    default:
-                        break;
-                }
-
-                $value = data_get($item, 'conf_value', data_get($defaultDiskConf, $key, ''));
-                data_set($defaultDiskConf, $key, $value);
-            }
+//            foreach ($diskConf as $item) {
+//                $key = data_get($item, 'conf_key');
+//
+//                if($key == 'driver'){
+//                    continue;
+//                }
+//
+//                switch ($key) {
+//                    case 'key':
+//                    case 'secret':
+//                        $key = 'credentials.'.$key;
+//
+//                        break;
+//
+//                    case 'bucket':
+//                        $key = 'bucket_name';
+//
+//                        break;
+//
+//                    default:
+//                        break;
+//                }
+//
+//                $value = data_get($item, 'conf_value', data_get($defaultDiskConf, $key, ''));
+//                data_set($defaultDiskConf, $key, $value);
+//            }
 
             $config->set($configKey, $defaultDiskConf);
 

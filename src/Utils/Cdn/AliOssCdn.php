@@ -57,7 +57,7 @@ class AliOssCdn extends ResourcesCdn
 
             $config->set($configKey, $defaultDiskConf);
 
-            return $defaultDiskConf;
+            return $config->get($configKey, $configData);
         });
     }
 
