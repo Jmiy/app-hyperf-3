@@ -2,14 +2,14 @@
 
 namespace Business\Hyperf\Utils\Cdn;
 
-use Business\Hyperf\Services\DictStoreService;
 use Business\Hyperf\Constants\Constant;
 use Business\Hyperf\Utils\Context;
 use Hyperf\HttpMessage\Upload\UploadedFile;
 use Hyperf\Utils\ApplicationContext;
 use Hyperf\Filesystem\FilesystemFactory;
 use Hyperf\Utils\Str;
-use League\Flysystem\AdapterInterface;
+use League\Flysystem\Visibility;
+use League\Flysystem\Config;
 
 class AwsS3Cdn extends ResourcesCdn
 {
@@ -19,7 +19,8 @@ class AwsS3Cdn extends ResourcesCdn
      * @param int $storeId 商城id
      * @param array $configData 配置数据
      */
-    public static function setConf($storeId = 1, $configData = []) {
+    public static function setConf($storeId = 1, $configData = [])
+    {
 
         $key = static::getContextKey($storeId);
 
@@ -51,7 +52,7 @@ class AwsS3Cdn extends ResourcesCdn
             //设置配置
             //获取默认配置
             $defaultDiskConf = $config->get('file.storage.s3');
-            data_set($defaultDiskConf,'diskName',$diskName);
+            data_set($defaultDiskConf, 'diskName', $diskName);
 //            [
 //                'driver' => \Hyperf\Filesystem\Adapter\S3AdapterFactory::class,
 //                'credentials' => [
@@ -64,6 +65,14 @@ class AwsS3Cdn extends ResourcesCdn
 //                'use_path_style_endpoint' => false,
 //                'endpoint' => env('S3_ENDPOINT'),
 //                'bucket_name' => env('S3_BUCKET'),
+//                'host' => [
+//                    'bucket_name' => [
+//                        1 => ['http://us-cube-img.stosz.com'], // 图片域名
+//                        2 => ['http://us-cube-video.stosz.com'], //视频域名
+//                        3 => ['http://us-cube-js-css.stosz.com'], // js域名
+//                        4 => ['http://us-cube-js-css.stosz.com'], //css域名
+//                    ]
+//                ],
 //            ];
 
             //更新配置
@@ -118,17 +127,17 @@ class AwsS3Cdn extends ResourcesCdn
         }
 
         $configData = self::setConf($storeId);
-        $diskName = data_get($configData,'diskName');
-        $driver = data_get($configData,'driver');
-        if(empty($diskName)){
+        $diskName = data_get($configData, 'diskName');
+        $driver = data_get($configData, 'driver');
+        if (empty($diskName)) {
             data_set($rs, Constant::CODE, 2);
             data_set($rs, Constant::MSG, $storeId . ' s3 配置不存在');
             return $rs;
         }
 
-        if(empty($driver)){
+        if (empty($driver)) {
             data_set($rs, Constant::CODE, 3);
-            data_set($rs, Constant::MSG, $storeId . ' '.$diskName.' s3 云存储配置不存在');
+            data_set($rs, Constant::MSG, $storeId . ' ' . $diskName . ' s3 云存储配置不存在');
             return $rs;
         }
 
@@ -137,13 +146,34 @@ class AwsS3Cdn extends ResourcesCdn
         $filesystem = $factory->get($diskName);
 
         data_set($rs, Constant::DATA, $filesystem);
+        data_set($rs, 'configData', $configData);
 
         return $rs;
     }
 
+    /**
+     * 获取资源域名
+     * @param int $storeId 品牌id
+     * @param int $resourceType 资源类型 0:所有 1:图片 2:视频 3:js 4:css 默认:1
+     * @param array|null $domain cdn域名
+     * @return array 图片cdn域名
+     */
+    public static function getResourceTypeDomain($storeId = 1, $resourceType = 0, $isCn = false, $domain = null)
+    {
+        $configData = static::setConf($storeId);
+        $bucket = data_get($configData, 'bucket_name','-1');
+
+        $cdnDomains = data_get($configData, 'host.' . $bucket . '.' . $resourceType, []);
+
+        if (is_array($domain)) {
+            $cdnDomains = array_merge($cdnDomains, $domain);
+        }
+
+        return array_values(array_filter(array_unique($cdnDomains)));
+    }
+
     public static function uploadBase64File($file = null, $vitualPath = '', $is_del = false, $isCn = false, $fileName = '', $resourceType = 1, $extData = Constant::PARAMETER_ARRAY_DEFAULT)
     {
-
         $diskData = static::getDisk($extData);
         if (data_get($diskData, Constant::CODE, 0) != 1) {
             return $diskData;
@@ -155,7 +185,7 @@ class AwsS3Cdn extends ResourcesCdn
         ];
         $rs = static::getDefaultResponseData(Constant::ORDER_STATUS_SHIPPED_INT, Constant::PARAMETER_STRING_DEFAULT, $_data);
 
-        $fileExtension = '';
+        $fileExtension = '.png';
         if (strpos($file, 'data:image/png;base64') !== false) {
             $data = explode(',', $file); //data:image/png;base64,iVBORw0KGgoAAAANSUhEU
             $fileContents = base64_decode(end($data));
@@ -171,24 +201,18 @@ class AwsS3Cdn extends ResourcesCdn
         $path = static::getUploadFileName($resourceType, $vitualPath, $fileExtension, $fileName);
 
         $config = [
-            'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+            Config::OPTION_VISIBILITY => Visibility::PUBLIC,
+            Config::OPTION_DIRECTORY_VISIBILITY => Visibility::PUBLIC,
             //'mimetype'=>'',
         ];
-        $isPut = $filesystem->write(
+        $filesystem->write(
             $path,
             $fileContents,
             $config
         );
 
-        if (empty($isPut)) {
-            data_set($rs, Constant::CODE, 0);
-            data_set($rs, Constant::MSG, '文件上传失败');
-
-            return $rs;
-        }
-
         $storeId = data_get($extData, Constant::DB_COLUMN_SITE_ID, 0);
-        $url = static::getResourceUrl($storeId, $path);
+        $url = static::getResourceUrl($storeId, $path, $resourceType, $isCn);
 
         data_set($rs, Constant::DATA . Constant::LINKER . Constant::FILE_URL, $url);
         data_set($rs, Constant::DATA . Constant::LINKER . Constant::FILE_FULL_PATH, $url);
@@ -236,7 +260,7 @@ class AwsS3Cdn extends ResourcesCdn
                 static::setFile(null);
                 $rs = static::uploadBase64File($file, $vitualPath, $is_del, $isCn, $fileName, $resourceType, $extData);
 
-                data_set($uploadData, $key, $rs);
+                data_set($uploadData, $key . '', $rs);
                 continue;
             }
 
@@ -254,25 +278,29 @@ class AwsS3Cdn extends ResourcesCdn
 
             if (data_get($extData, 'use_origin_name', Constant::PARAMETER_INT_DEFAULT)) {//如果需要使用原始文件名，就获取客户原始文件名
                 $fileName = $originalName;
-            }else{
+            } else {
                 $extension = $file->getExtension();
-                $fileName = Str::random(10) . '.'.$extension;
+                $fileName = Str::random(10) . '.' . $extension;
             }
 
             $config = [
-                'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+                Config::OPTION_VISIBILITY => Visibility::PUBLIC,
+                Config::OPTION_DIRECTORY_VISIBILITY => Visibility::PUBLIC,
                 //'mimetype'=>'',
             ];
             $path = static::normalizePath(implode('/', [$distVitualPath, $fileName]));
+
             $stream = fopen($file->getRealPath(), 'r+');
             $filesystem->writeStream(
                 $path,
                 $stream,
                 $config
             );
-            fclose($stream);
+            if (is_resource($stream)) {
+                fclose($stream);
+            }
 
-            $url = static::getResourceUrl($storeId, $path);
+            $url = static::getResourceUrl($storeId, $path, $resourceType, $isCn);;
 
             data_set($rs, Constant::DATA . Constant::LINKER . Constant::FILE_URL, $url);
             data_set($rs, Constant::DATA . Constant::LINKER . Constant::FILE_FULL_PATH, $url);

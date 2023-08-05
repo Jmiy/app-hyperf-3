@@ -19,10 +19,8 @@ class ResourcesCdn
      */
     public static function getContextKey($storeId = 1)
     {
-        $key = md5(json_encode([static::class, $storeId]));
-        return Context::storeData($key, function () use ($key) {
-            return 'app.filesystem.' . $key;
-        });
+        $key = str_replace('.', '', md5(json_encode([static::class, $storeId])));
+        return 'filesystem.' . $key;
     }
 
     /**
@@ -45,7 +43,7 @@ class ResourcesCdn
     public static function getAttribute($storeId = 1, $key = null, $configData = [])
     {
         $configData = static::setConf($storeId, $configData);
-        return data_get($configData, $key);
+        return data_get($configData, $key, '');
     }
 
     /**
@@ -55,7 +53,7 @@ class ResourcesCdn
 
     public static function getArea()
     {
-        $_area = explode('_', config('app.serverarea'));
+        $_area = explode('_', config('app.serverarea', ''));
         $area = end($_area);
         return $area;
     }
@@ -72,7 +70,10 @@ class ResourcesCdn
 
         $area = static::getArea();
 
-        $cdnDomains = static::getAttribute($storeId, ($area ? $area . '_' : '') . 'url' . ($resourceType ? '_' . $resourceType : ''));//key组成规则: area_url_1
+        $cdnDomains = static::getAttribute(
+            $storeId,
+            ($area ? $area . '_' : '') . 'url' . ($resourceType ? '_' . $resourceType : '')
+        );//key组成规则: area_url_1
         $cdnDomains = explode(',', $cdnDomains);
 
         if (is_array($domain)) {
@@ -96,6 +97,11 @@ class ResourcesCdn
         $cdnData = static::getResourceTypeDomain($storeId, $resourceType, $isCn, $domain);
 
         $num = count($cdnData);
+
+        if ($num <= 0) {
+            return '';
+        }
+
         $contextId = static::getContextKey($storeId) . '.resourceKey';
         $_num = Context::getOrSet($contextId, $num);
         Context::set($contextId, $_num + 1);

@@ -8,7 +8,8 @@ use Hyperf\HttpMessage\Upload\UploadedFile;
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Filesystem\FilesystemFactory;
 use Hyperf\Stringable\Str;
-use League\Flysystem\AdapterInterface;
+use League\Flysystem\Config;
+use League\Flysystem\Visibility;
 
 class AliOssCdn extends ResourcesCdn
 {
@@ -34,9 +35,6 @@ class AliOssCdn extends ResourcesCdn
             }
 
             $configKey = 'file.storage.' . $diskName;
-
-            //获取driver配置
-            $diskConf = DictStoreService::getListByType($storeId, $diskName);
 
             //设置配置
             //获取默认配置
@@ -98,8 +96,30 @@ class AliOssCdn extends ResourcesCdn
         $filesystem = $factory->get($diskName);
 
         data_set($rs, Constant::DATA, $filesystem);
+        data_set($rs, 'configData', $configData);
 
         return $rs;
+    }
+
+    /**
+     * 获取资源域名
+     * @param int $storeId 品牌id
+     * @param int $resourceType 资源类型 0:所有 1:图片 2:视频 3:js 4:css 默认:1
+     * @param array|null $domain cdn域名
+     * @return array 图片cdn域名
+     */
+    public static function getResourceTypeDomain($storeId = 1, $resourceType = 0, $isCn = false, $domain = null)
+    {
+        $configData = static::setConf($storeId);
+        $bucket = data_get($configData, 'bucket', '-1');
+
+        $cdnDomains = data_get($configData, 'host.' . $bucket . '.' . $resourceType, []);
+
+        if (is_array($domain)) {
+            $cdnDomains = array_merge($cdnDomains, $domain);
+        }
+
+        return array_values(array_filter(array_unique($cdnDomains)));
     }
 
     public static function uploadBase64File($file = null, $vitualPath = '', $is_del = false, $isCn = false, $fileName = '', $resourceType = 1, $extData = Constant::PARAMETER_ARRAY_DEFAULT)
@@ -116,7 +136,7 @@ class AliOssCdn extends ResourcesCdn
         ];
         $rs = static::getDefaultResponseData(Constant::ORDER_STATUS_SHIPPED_INT, Constant::PARAMETER_STRING_DEFAULT, $_data);
 
-        $fileExtension = '';
+        $fileExtension = '.png';
         if (strpos($file, 'data:image/png;base64') !== false) {
             $data = explode(',', $file); //data:image/png;base64,iVBORw0KGgoAAAANSUhEU
             $fileContents = base64_decode(end($data));
@@ -132,24 +152,18 @@ class AliOssCdn extends ResourcesCdn
         $path = static::getUploadFileName($resourceType, $vitualPath, $fileExtension, $fileName);
 
         $config = [
-            'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+            Config::OPTION_VISIBILITY => Visibility::PUBLIC,
+            Config::OPTION_DIRECTORY_VISIBILITY => Visibility::PUBLIC,
             //'mimetype'=>'',
         ];
-        $isPut = $filesystem->write(
+        $filesystem->write(
             $path,
             $fileContents,
             $config
         );
 
-        if (empty($isPut)) {
-            data_set($rs, Constant::CODE, 0);
-            data_set($rs, Constant::MSG, '文件上传失败');
-
-            return $rs;
-        }
-
         $storeId = data_get($extData, Constant::DB_COLUMN_SITE_ID, 0);
-        $url = static::getResourceUrl($storeId, $path);
+        $url = static::getResourceUrl($storeId, $path, $resourceType, $isCn);
 
         data_set($rs, Constant::DATA . Constant::LINKER . Constant::FILE_URL, $url);
         data_set($rs, Constant::DATA . Constant::LINKER . Constant::FILE_FULL_PATH, $url);
@@ -175,6 +189,7 @@ class AliOssCdn extends ResourcesCdn
         if (data_get($diskData, Constant::CODE, 0) != 1) {
             return $diskData;
         }
+
         $filesystem = data_get($diskData, Constant::DATA, null);
 
         $_data = [
@@ -197,7 +212,7 @@ class AliOssCdn extends ResourcesCdn
                 static::setFile(null);
                 $rs = static::uploadBase64File($file, $vitualPath, $is_del, $isCn, $fileName, $resourceType, $extData);
 
-                data_set($uploadData, $key, $rs);
+                data_set($uploadData, $key . '', $rs);
                 continue;
             }
 
@@ -221,7 +236,8 @@ class AliOssCdn extends ResourcesCdn
             }
 
             $config = [
-                'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+                Config::OPTION_VISIBILITY => Visibility::PUBLIC,
+                Config::OPTION_DIRECTORY_VISIBILITY => Visibility::PUBLIC,
                 //'mimetype'=>'',
             ];
             $path = static::normalizePath(implode('/', [$distVitualPath, $fileName]));
@@ -231,9 +247,12 @@ class AliOssCdn extends ResourcesCdn
                 $stream,
                 $config
             );
-            fclose($stream);
 
-            $url = static::getResourceUrl($storeId, $path);
+            if (is_resource($stream)) {
+                fclose($stream);
+            }
+
+            $url = static::getResourceUrl($storeId, $path, $resourceType, $isCn);
 
             data_set($rs, Constant::DATA . Constant::LINKER . Constant::FILE_URL, $url);
             data_set($rs, Constant::DATA . Constant::LINKER . Constant::FILE_FULL_PATH, $url);
