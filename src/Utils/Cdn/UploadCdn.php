@@ -95,7 +95,7 @@ class UploadCdn extends ResourcesCdn
                     static::setFile(null);
                     data_set(
                         $uploadData,
-                        $key,
+                        $key . '',
                         static::uploadBase64File($file, $vitualPath, false, false, $fileName, $resourceType, $extData)
                     );
                     continue;
@@ -124,7 +124,7 @@ class UploadCdn extends ResourcesCdn
                 $filesystem = $factory->get('local');
                 $path = static::normalizePath($url);
                 $stream = fopen($file->getRealPath(), 'r+');
-                $isUploaded = $filesystem->writeStream(
+                $filesystem->writeStream(
                     $path,
                     $stream
                 );
