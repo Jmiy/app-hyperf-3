@@ -87,9 +87,7 @@ class CdnManager {
             $file = new UploadedFile($filePath, (int) filesize($filePath),(int) UPLOAD_ERR_OK, $filePath);
         }
 
-        $rs = $cdnProvider::upload($filePath, $file, $vitualPath, $is_del, $isCn, $fileName, $resourceType, $extData);
-
-        return $rs;
+        return $cdnProvider::upload($filePath, $file, $vitualPath, $is_del, $isCn, $fileName, $resourceType, $extData);
     }
 
 }

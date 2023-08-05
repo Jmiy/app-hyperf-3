@@ -10,9 +10,11 @@ use Hyperf\Utils\ApplicationContext;
 use Illuminate\Support\Facades\Storage;
 use Business\Hyperf\Constants\Constant;
 
-class UploadCdn extends ResourcesCdn {
+class UploadCdn extends ResourcesCdn
+{
 
-    public static function uploadBase64File($file, $vitualPath, $fileName, $resourceType, $extData = Constant::PARAMETER_ARRAY_DEFAULT) {
+    public static function uploadBase64File($file = null, $vitualPath = '', $is_del = false, $isCn = false, $fileName = '', $resourceType = 1, $extData = Constant::PARAMETER_ARRAY_DEFAULT)
+    {
         $_data = [
             Constant::RESOURCE_TYPE => $resourceType, //资源类型 1:图片 2:视频 3:js 4:css 默认:1
         ];
@@ -55,17 +57,18 @@ class UploadCdn extends ResourcesCdn {
      * @param string $filePath 图片在服务器的绝对路径
      * @param string $resourceType 文件类型 1：图片 2：视频
      * @param string $vitualPath 七牛虚拟路径
-     * @param boolean $is_del  是否删除原文件  false:否  true：是  默认:false 
-     * @param boolean $isCn    是否使用国内cdn  false:否  true：是  默认:false
+     * @param boolean $is_del 是否删除原文件  false:否  true：是  默认:false
+     * @param boolean $isCn 是否使用国内cdn  false:否  true：是  默认:false
      * @return array 上传结果   array(
-      "state" => 'SUCCESS',//状态：SUCCESS：成功  FAILED：失败
-      Constant::FILE_URL => static::getResourceUrl($url, 1, $isCn), //国外cdn绝对地址 如 http://xxx.com/ddd.jpg
-      Constant::FILE_TITLE => static::getResourceUrl($url, 1, $isCn), //国外cdn绝对地址 如 http://xxx.com/ddd.jpg
-      Constant::DB_COLUMN_TYPE => 'jpg',//图片类型
-      Constant::DATA => $info,//七牛接口响应数据
-      )
+     * "state" => 'SUCCESS',//状态：SUCCESS：成功  FAILED：失败
+     * Constant::FILE_URL => static::getResourceUrl($url, 1, $isCn), //国外cdn绝对地址 如 http://xxx.com/ddd.jpg
+     * Constant::FILE_TITLE => static::getResourceUrl($url, 1, $isCn), //国外cdn绝对地址 如 http://xxx.com/ddd.jpg
+     * Constant::DB_COLUMN_TYPE => 'jpg',//图片类型
+     * Constant::DATA => $info,//七牛接口响应数据
+     * )
      */
-    public static function upload($filePath = null, $files = null, $vitualPath = '/upload/file/', $is_del = false, $isCn = false, $fileName = '', $resourceType = 1, $extData = Constant::PARAMETER_ARRAY_DEFAULT) {
+    public static function upload($filePath = null, $files = null, $vitualPath = '/upload/file/', $is_del = false, $isCn = false, $fileName = '', $resourceType = 1, $extData = Constant::PARAMETER_ARRAY_DEFAULT)
+    {
 
         $_data = [
             Constant::RESOURCE_TYPE => $resourceType, //资源类型 1:图片 2:视频 3:js 4:css 默认:1
@@ -83,7 +86,7 @@ class UploadCdn extends ResourcesCdn {
             foreach ($files as $key => $file) {
 
                 if (is_array($file)) {
-                    data_set($uploadData, $key, static::upload(null, $file, $vitualPath, $is_del, $isCn, $fileName, $resourceType, $extData));
+                    data_set($uploadData, $key, static::upload('all', $file, $vitualPath, $is_del, $isCn, $fileName, $resourceType, $extData));
                     continue;
                 }
 
@@ -121,7 +124,9 @@ class UploadCdn extends ResourcesCdn {
                     $path,
                     $stream
                 );
-                fclose($stream);
+                if (is_resource($stream)) {
+                    fclose($stream);
+                }
 
                 data_set($rs, Constant::DATA . Constant::LINKER . Constant::DB_COLUMN_TYPE, $filetype);
                 data_set($rs, Constant::DATA . Constant::LINKER . Constant::FILE_URL, $url);
@@ -133,7 +138,7 @@ class UploadCdn extends ResourcesCdn {
             }
         }
 
-        return data_get($uploadData, $filePath, Constant::PARAMETER_ARRAY_DEFAULT);
+        return data_get($uploadData, $filePath, $uploadData);
     }
 
 }
