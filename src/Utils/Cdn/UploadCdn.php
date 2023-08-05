@@ -93,7 +93,11 @@ class UploadCdn extends ResourcesCdn
                 if (!($file instanceof UploadedFile)) {
                     //设置 file 到协程上下文，以便后续使用
                     static::setFile(null);
-                    data_set($uploadData, $key, static::uploadBase64File($file, $vitualPath, $fileName, $resourceType, $extData));
+                    data_set(
+                        $uploadData,
+                        $key,
+                        static::uploadBase64File($file, $vitualPath, false, false, $fileName, $resourceType, $extData)
+                    );
                     continue;
                 }
 
