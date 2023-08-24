@@ -144,8 +144,10 @@ trait Base
             if ($messageCount >= $limit) {
                 $__data[] = $_data;
                 unset($data[$messageId]);
+            } else {
+                $countData[$messageId . '_index'] = $messageCount;
             }
-            $countData[$messageId . '_index'] = count($_data);
+
         }
 
         // 从原始数组中提取值，并保存键
@@ -155,7 +157,7 @@ trait Base
         // SORT_DESC 表示倒序排序
         array_multisort($values, SORT_DESC, $countData);
 
-        $index = $__data ? count($__data) - 1 : 0;
+        $index = $__data ? count($__data) : 0;
         $_limit = 0;
         $__data[$index] = [];
 
@@ -168,7 +170,7 @@ trait Base
 
             $i = $i - 1;
             if ($_limit + $__limit <= $limit) {
-                $__data[$index] = Arr::collapse([$__data[$index], $data[$messageId]]);
+                $__data[$index] = Arr::collapse([$__data[$index], data_get($data, [$messageId], [])]);
                 unset($data[$messageId]);
                 unset($countData[$_messageId]);
                 $_limit += $__limit;
