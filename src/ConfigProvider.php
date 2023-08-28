@@ -31,6 +31,8 @@ use Hyperf\Coroutine\Concurrent as CoroutineConcurrent;
 
 use Hyperf\ConfigNacos\NacosDriver as ConfigNacosDriver;
 
+use Hyperf\Redis\Pool\RedisPool;
+
 class ConfigProvider
 {
     public function __invoke(): array
@@ -76,6 +78,8 @@ class ConfigProvider
                         NacosDriver::class => __DIR__ . '/../class_map/Hyperf/ServiceGovernanceNacos/NacosDriver.php',
                         ServiceGovernanceNacosClient::class => __DIR__ . '/../class_map/Hyperf/ServiceGovernanceNacos/Client.php',
                         Config::class => __DIR__ . '/../class_map/Hyperf/Nacos/Config.php',
+
+                        RedisPool::class => __DIR__ . '/../class_map/Hyperf/Redis/Pool/RedisPool.php',
                     ],
                 ],
             ],
