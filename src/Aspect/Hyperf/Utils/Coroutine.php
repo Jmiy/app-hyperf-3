@@ -41,7 +41,10 @@ class Coroutine extends AbstractAspect
         $result = SwooleCoroutine::create(static function () use ($callable, $id) {
             try {
                 // 按需复制，禁止复制 Socket，不然会导致 Socket 跨协程调用从而报错。
-                Context::copy($id, config('common.context_copy', []));
+                $keys = config('common.context_copy', []);
+                $keys[] = 'json-rpc-headers';
+                Context::copy($id, $keys);
+                var_dump('UtilsCoroutine', $keys);
                 call($callable);
             } catch (Throwable $throwable) {
                 try {
