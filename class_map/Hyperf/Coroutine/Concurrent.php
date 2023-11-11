@@ -9,10 +9,12 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace Hyperf\Coroutine;
 
 use Business\Hyperf\Exception\Handler\AppExceptionHandler;
 use Hyperf\Context\ApplicationContext;
+use Hyperf\Context\Context;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\Coroutine\Exception\InvalidArgumentException;
 use Hyperf\Engine\Channel;
@@ -69,9 +71,14 @@ class Concurrent
     public function create(callable $callable): void
     {
         $this->channel->push(true);
-
-        Coroutine::create(function () use ($callable) {
+        $id = Coroutine::id();
+        Coroutine::create(function () use ($callable, $id) {
             try {
+                // 按需复制，禁止复制 Socket，不然会导致 Socket 跨协程调用从而报错。
+                $keys = config('common.context_copy', []);
+                $keys[] = 'json-rpc-headers';
+                Context::copy($id, $keys);
+                var_dump($keys);
                 $callable();
             } catch (Throwable $exception) {
                 if (ApplicationContext::hasContainer()) {

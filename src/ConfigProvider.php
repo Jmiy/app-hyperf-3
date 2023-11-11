@@ -32,6 +32,7 @@ use Hyperf\Coroutine\Concurrent as CoroutineConcurrent;
 use Hyperf\ConfigNacos\NacosDriver as ConfigNacosDriver;
 
 use Hyperf\Redis\Pool\RedisPool;
+use Hyperf\JsonRpc\JsonRpcHttpTransporter;
 
 class ConfigProvider
 {
@@ -80,6 +81,8 @@ class ConfigProvider
                         Config::class => __DIR__ . '/../class_map/Hyperf/Nacos/Config.php',
 
                         RedisPool::class => __DIR__ . '/../class_map/Hyperf/Redis/Pool/RedisPool.php',
+
+                        JsonRpcHttpTransporter::class => __DIR__ . '/../class_map/Hyperf/JsonRpc/JsonRpcHttpTransporter.php',
                     ],
                 ],
             ],

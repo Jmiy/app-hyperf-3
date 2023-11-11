@@ -75,7 +75,7 @@ class RateLimitAnnotationAspect implements AroundInterface
         }
 
         if (!$annotation->limitCallback || !is_callable($annotation->limitCallback)) {
-            throw new RateLimitException('Service Unavailable.', 503);
+            throw new RateLimitException('Service Unavailable Rate Limit.', 503);
         }
         return call_user_func($annotation->limitCallback, $seconds, $proceedingJoinPoint);
     }
