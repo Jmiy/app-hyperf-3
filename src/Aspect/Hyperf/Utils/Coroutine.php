@@ -44,7 +44,6 @@ class Coroutine extends AbstractAspect
                 $keys = config('common.context_copy', []);
                 $keys[] = 'json-rpc-headers';
                 Context::copy($id, $keys);
-                var_dump('UtilsCoroutine', $keys);
                 call($callable);
             } catch (Throwable $throwable) {
                 try {
