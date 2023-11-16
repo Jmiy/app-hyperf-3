@@ -14,6 +14,7 @@ use Psr\Http\Message\UriInterface;
 use Hyperf\Guzzle\CoroutineHandler;
 use Hyperf\Utils\Coroutine;
 use Hyperf\Guzzle\HandlerStackFactory;
+use Hyperf\Context\Context;
 
 /**
  * @final
@@ -295,6 +296,16 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
      */
     private function prepareDefaults(array $options): array
     {
+
+        $contextHeaders = Context::get('json-rpc-headers', []);
+        $options[RequestOptions::HEADERS] = Arr::collapse([
+            $contextHeaders,
+            [
+                'x-jmiy-app' => config('app_name'),
+            ],
+            data_get($options, [RequestOptions::HEADERS], [])
+        ]);
+
         $defaults = $this->config;
 
         if (!empty($defaults['headers'])) {

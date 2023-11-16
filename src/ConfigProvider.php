@@ -82,7 +82,7 @@ class ConfigProvider
 
                         RedisPool::class => __DIR__ . '/../class_map/Hyperf/Redis/Pool/RedisPool.php',
 
-                        JsonRpcHttpTransporter::class => __DIR__ . '/../class_map/Hyperf/JsonRpc/JsonRpcHttpTransporter.php',
+//                        JsonRpcHttpTransporter::class => __DIR__ . '/../class_map/Hyperf/JsonRpc/JsonRpcHttpTransporter.php',
                     ],
                 ],
             ],
