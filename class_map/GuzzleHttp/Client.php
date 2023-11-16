@@ -296,15 +296,15 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
      */
     private function prepareDefaults(array $options): array
     {
-
         $contextHeaders = Context::get('json-rpc-headers', []);
-        $options[RequestOptions::HEADERS] = Arr::collapse([
+        $results = [
             $contextHeaders,
             [
                 'x-jmiy-app' => config('app_name'),
             ],
             data_get($options, [RequestOptions::HEADERS], [])
-        ]);
+        ];
+        $options[RequestOptions::HEADERS] = array_merge([], ...$results);
 
         $defaults = $this->config;
 
