@@ -283,6 +283,9 @@ trait BaseDb
 //            return static::updateOrCreate(...func_get_args());
 //        }
 
+        $retry = 0;
+        beginning:
+
         $model = static::getModel($connection, $table);
 
         $select = data_get($handleData, Constant::DB_OPERATION_SELECT, []);
@@ -292,8 +295,6 @@ trait BaseDb
         }
         data_set($where, 'handleData', $handleData);
 
-        $retry = 0;
-        beginning:
         try {
             $rs = $lock = $model->updateOrCreate($where, $data); // ->select($select) updateOrCreate：不可以添加主键id的值  updateOrInsert：可以添加主键id的值
         } catch (\Throwable $throwable) {
