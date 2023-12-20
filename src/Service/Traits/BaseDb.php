@@ -94,24 +94,24 @@ trait BaseDb
             return false;
         }
 
-        $retry = 0;
-        beginning:
-        try {
-            if ($isGetId) {
-                return static::getModel($connection, $table)->insertGetId($data);
-            }
-
-            return static::getModel($connection, $table)->insert($data);
-        } catch (\Throwable $throwable) {
-
-            if ($retry < 10) {
-                $retry = $retry + 1;
-                Coroutine::sleep(rand(2, 5));
-                goto beginning;
-            }
-
-            throw $throwable;
+//        $retry = 0;
+//        beginning:
+//        try {
+        if ($isGetId) {
+            return static::getModel($connection, $table)->insertGetId($data);
         }
+
+        return static::getModel($connection, $table)->insert($data);
+//        } catch (\Throwable $throwable) {
+//
+//            if ($retry < 10) {
+//                $retry = $retry + 1;
+//                Coroutine::sleep(rand(2, 5));
+//                goto beginning;
+//            }
+//
+//            throw $throwable;
+//        }
     }
 
     /**
@@ -130,29 +130,29 @@ trait BaseDb
             return false;
         }
 
-        $retry = 0;
-        beginning:
-        try {
-            $model = static::getModel($connection, $table);
+//        $retry = 0;
+//        beginning:
+//        try {
+        $model = static::getModel($connection, $table);
 
-            $model = $model->buildWhere($where);
-            if (is_array($handleData) && !empty($handleData)) {
-                foreach ($handleData as $callback) {
-                    $model = call($callback, [$model]);
-                }
+        $model = $model->buildWhere($where);
+        if (is_array($handleData) && !empty($handleData)) {
+            foreach ($handleData as $callback) {
+                $model = call($callback, [$model]);
             }
-
-            return $model->update($data);
-        } catch (\Throwable $throwable) {
-
-            if ($retry < 10) {
-                $retry = $retry + 1;
-                Coroutine::sleep(rand(2, 5));
-                goto beginning;
-            }
-
-            throw $throwable;
         }
+
+        return $model->update($data);
+//        } catch (\Throwable $throwable) {
+//
+//            if ($retry < 10) {
+//                $retry = $retry + 1;
+//                Coroutine::sleep(rand(2, 5));
+//                goto beginning;
+//            }
+//
+//            throw $throwable;
+//        }
     }
 
     /**
@@ -170,28 +170,28 @@ trait BaseDb
             return false;
         }
 
-        $retry = 0;
-        beginning:
-        try {
-            $model = static::getModel($connection, $table);
-            $model = $model->buildWhere($where);
-            if (is_array($handleData) && !empty($handleData)) {
-                foreach ($handleData as $callback) {
-                    $model = call($callback, [$model]);
-                }
+//        $retry = 0;
+//        beginning:
+//        try {
+        $model = static::getModel($connection, $table);
+        $model = $model->buildWhere($where);
+        if (is_array($handleData) && !empty($handleData)) {
+            foreach ($handleData as $callback) {
+                $model = call($callback, [$model]);
             }
-
-            return $model->delete(); //逻辑删除
-        } catch (\Throwable $throwable) {
-
-            if ($retry < 10) {
-                $retry = $retry + 1;
-                Coroutine::sleep(rand(2, 5));
-                goto beginning;
-            }
-
-            throw $throwable;
         }
+
+        return $model->delete(); //逻辑删除
+//        } catch (\Throwable $throwable) {
+//
+//            if ($retry < 10) {
+//                $retry = $retry + 1;
+//                Coroutine::sleep(rand(2, 5));
+//                goto beginning;
+//            }
+//
+//            throw $throwable;
+//        }
 
     }
 
@@ -232,8 +232,8 @@ trait BaseDb
         $parameters = [
             function () use ($where, $data, $handleData, $connection, $table) {
 
-                $retry = 0;
-                beginning:
+//                $retry = 0;
+//                beginning:
 
                 $model = static::getModel($connection, $table);
 
@@ -244,20 +244,20 @@ trait BaseDb
                 }
                 data_set($where, 'handleData', $handleData);
 
-                try {
-                    return $model->updateOrCreate($where, $data); // ->select($select) updateOrCreate：不可以添加主键id的值  updateOrInsert：可以添加主键id的值
-                } catch (\Throwable $throwable) {
-
-                    if (false === strpos($throwable->getMessage(), "for key 'PRIMARY'")) {//如果不是主键冲突，就重试
-                        if ($retry < 10) {
-                            $retry = $retry + 1;
-                            Coroutine::sleep(rand(2, 5));
-                            goto beginning;
-                        }
-                    }
-
-                    throw $throwable;
-                }
+//                try {
+                return $model->updateOrCreate($where, $data); // ->select($select) updateOrCreate：不可以添加主键id的值  updateOrInsert：可以添加主键id的值
+//                } catch (\Throwable $throwable) {
+//
+//                    if (false !== strpos($throwable->getMessage(), "wait_timeout")) {//如果不是主键冲突，就重试
+//                        if ($retry < 3) {
+//                            $retry = $retry + 1;
+//                            Coroutine::sleep(rand(2, 5));
+//                            goto beginning;
+//                        }
+//                    }
+//
+//                    throw $throwable;
+//                }
             }
         ];
         $rs = $lock = static::handleLock([$key], $parameters);
@@ -541,7 +541,7 @@ trait BaseDb
         beginning:
         try {
             $result = $dbConnection->select(strtr($tableSql, $trans));
-            if(empty($result)) {
+            if (empty($result)) {
                 return false;
             }
         } catch (\Throwable $throwable) {
@@ -660,7 +660,7 @@ trait BaseDb
      * @param string|array $table
      * @return array
      */
-    public static function handleDbConfig(string|array $connection=null, string|array $table=null): array
+    public static function handleDbConfig(string|array $connection = null, string|array $table = null): array
     {
         return call([static::getModelAlias(), 'handleDbConfig'], [$connection, $table]);
     }
