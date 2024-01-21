@@ -239,6 +239,7 @@ class ResourcesCdn
             $fileExtension = explode(';', $fileExtension[1]);
             $fileExtension = '.' . $fileExtension[0];
         } else {
+            $fileExtension = data_get($extData, ['fileExtension'], $fileExtension);
             $fileContents = base64_decode($file);
         }
 
@@ -277,7 +278,6 @@ class ResourcesCdn
      */
     public static function upload($filePath, $files = null, $vitualPath = '', $is_del = false, $isCn = false, $fileName = '', $resourceType = 1, $extData = Constant::PARAMETER_ARRAY_DEFAULT)
     {
-
         $diskData = static::getDisk($extData);
         if (data_get($diskData, Constant::CODE, 0) != 1) {
             return $diskData;
@@ -295,6 +295,7 @@ class ResourcesCdn
         $distVitualPath = static::getDistVitualPath($resourceType, $vitualPath);
         $storeId = data_get($extData, Constant::DB_COLUMN_SITE_ID, 0);
 
+
         $concurrent = 10;//count($itemIds);
         $callableData = [];
         foreach ($files as $key => $file) {
@@ -309,7 +310,8 @@ class ResourcesCdn
                     return static::uploadBase64File($file, $vitualPath, $is_del, $isCn, $fileName, $resourceType, $extData);
                 }
 
-                if (!$file->isValid()) {
+                $isValid = data_get($extData, 'isValid', true);
+                if ($isValid && !$file->isValid()) {
                     data_set($rs, Constant::DATA . Constant::LINKER . Constant::FILE_URL, Constant::PARAMETER_STRING_DEFAULT);
                     data_set($rs, Constant::DATA . Constant::LINKER . Constant::FILE_FULL_PATH, Constant::PARAMETER_STRING_DEFAULT);
                     data_set($rs, Constant::CODE, 10031);
@@ -389,7 +391,7 @@ class ResourcesCdn
 
         }
 
-        return data_get($uploadData, $filePath, $uploadData);
+        return data_get($uploadData, [$filePath], $uploadData);
     }
 
     /**
