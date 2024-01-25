@@ -321,11 +321,15 @@ class ResourcesCdn
 
                 $originalName = static::getName($file->getClientFilename());//原始文件名
 
-                if (data_get($extData, 'use_origin_name', Constant::PARAMETER_INT_DEFAULT)) {//如果需要使用原始文件名，就获取客户原始文件名
-                    $fileName = $originalName;
+                if (empty($fileName)) {
+                    if (data_get($extData, 'use_origin_name', Constant::PARAMETER_INT_DEFAULT)) {//如果需要使用原始文件名，就获取客户原始文件名
+                        $fileName = $originalName;
+                    } else {
+                        $extension = $file->getExtension();
+                        $fileName = Str::random(10) . '.' . $extension;
+                    }
                 } else {
-                    $extension = $file->getExtension();
-                    $fileName = Str::random(10) . '.' . $extension;
+                    $fileName = Str::random(10) . $fileName;
                 }
 
                 $config = [
