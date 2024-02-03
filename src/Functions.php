@@ -1544,26 +1544,92 @@ if (!function_exists('getScheduleConf')) {
 
         $month = $month === null ? '*' : $month;
 
+        $separator = '';
+        $_separator = '/';
+        $__separator = '-';
         $_day = floor($second / (86400));
         if ($day === null) {
             $day = $_day > 0 ? ($_day < 10 ? ('0' . $_day) : $_day) : '*';
+        } else if (false !== stripos($day, $_separator)) {
+            $separator = $_separator;
+        } else if (false !== stripos($day, $__separator)) {
+            $separator = $__separator;
+        }
+        if ($separator) {
+            $data = explode($separator, $day);
+            $start = $data[0];
+            $end = $data[1];
+
+            if ($start === 'null') {
+                $start = $_day;
+            }
+
+            $day = implode($separator, [$start, $end]);
         }
 
+        $separator = '';
         $second = abs($second % (86400));
+        $_start = floor($second / 3600);
         if ($hour === null) {
-            $hour = floor($second / 3600);
-            $hour = $hour < 10 ? ('0' . $hour) : $hour;
+            $hour = $_start < 10 ? ('0' . $_start) : $_start;
+        } else if (false !== stripos($hour, $_separator)) {
+            $separator = $_separator;
+        } else if (false !== stripos($hour, $__separator)) {
+            $separator = $__separator;
+        }
+        if ($separator) {
+            $data = explode($separator, $hour);
+            $start = $data[0];
+            $end = $data[1];
+
+            if ($start === 'null') {
+                $start = $_start;
+            }
+
+            $hour = implode($separator, [$start, $end]);
         }
 
         $second = $second % 3600;
+        $separator = '';
+        $_start = floor($second / 60);
         if ($minute === null) {
-            $minute = floor($second / 60);
-            $minute = $minute < 10 ? ('0' . $minute) : $minute;
+            $minute = $_start < 10 ? ('0' . $_start) : $_start;
+        } else if (false !== stripos($minute, $_separator)) {
+            $separator = $_separator;
+        } else if (false !== stripos($minute, $__separator)) {
+            $separator = $__separator;
+        }
+        if ($separator) {
+            $data = explode($separator, $minute);
+            $start = $data[0];
+            $end = $data[1];
+
+            if ($start === 'null') {
+                $start = $_start;
+            }
+
+            $minute = implode($separator, [$start, $end]);
         }
 
+        $separator = '';
+        $_start = $second % 60;
         if ($sec === null) {
-            $sec = $second % 60;
-            $sec = $sec < 10 ? ('0' . $sec) : $sec;
+            $sec = $_start < 10 ? ('0' . $_start) : $_start;
+        } else if (false !== stripos($sec, $_separator)) {
+            $separator = $_separator;
+        } else if (false !== stripos($sec, $__separator)) {
+            $separator = $__separator;
+        }
+        if ($separator) {
+            $data = explode($separator, $sec);
+            $start = $data[0];
+            $end = $data[1];
+
+            if ($start === 'null') {
+                $start = $_start;
+            }
+
+            $sec = implode($separator, [$start, $end]);
         }
 
         return sprintf(
