@@ -9,8 +9,10 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace Hyperf\JsonRpc;
 
+use Business\Hyperf\Constants\Constant;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 use Hyperf\Collection\Arr;
@@ -46,10 +48,10 @@ class JsonRpcHttpTransporter implements TransporterInterface
 
     public function __construct(private ClientFactory $clientFactory, array $config = [])
     {
-        if (! isset($config['recv_timeout'])) {
+        if (!isset($config['recv_timeout'])) {
             $config['recv_timeout'] = $this->recvTimeout;
         }
-        if (! isset($config['connect_timeout'])) {
+        if (!isset($config['connect_timeout'])) {
             $config['connect_timeout'] = $this->connectTimeout;
         }
         $this->clientOptions = $config;
@@ -64,7 +66,7 @@ class JsonRpcHttpTransporter implements TransporterInterface
             if ($node->schema !== null) {
                 $schema = $node->schema;
             }
-            if (! in_array($schema, ['http', 'https'])) {
+            if (!in_array($schema, ['http', 'https'])) {
                 $schema = 'http';
             }
             $schema .= '://';
@@ -72,25 +74,44 @@ class JsonRpcHttpTransporter implements TransporterInterface
         });
         $url = $schema . $uri;
 
-        $contextHeaders = Context::get('json-rpc-headers',[]);
+        /****************AOP handle request options start *****************************/
+        $contextHeaders = Context::get(Constant::JSON_RPC_HEADERS_KEY, []);
 
         $headers = Arr::collapse([
             $contextHeaders,
             [
                 'Content-Type' => 'application/json',
-                'x-jmiy-app' => config('app_name'),
+                Constant::RPC_APP_KEY => config('app_name'),
             ]
         ]);
 
-        $response = $this->getClient()->post($url, [
+        if (!array_key_exists(Constant::RPC_PROTOCOL_KEY, $headers)) {
+            $headers[Constant::RPC_PROTOCOL_KEY] = Constant::JSON_RPC_HTTP_PROTOCOL;
+        }
+
+        $options = [
             RequestOptions::HEADERS => $headers,
             RequestOptions::HTTP_ERRORS => false,
             RequestOptions::BODY => $data,
-        ]);
-        if ($response->getStatusCode() === 200) {
-            return (string) $response->getBody();
+        ];
+        if (array_key_exists('requestOptions', $contextHeaders)) {
+            $requestOptions = data_get($contextHeaders, ['requestOptions']);//RequestOptions::PROXY
+            if ($requestOptions) {
+                $options = Arr::collapse([
+                    $options,
+                    $requestOptions
+                ]);
+            }
+            unset($headers['requestOptions']);
+            $options[RequestOptions::HEADERS] = $headers;
         }
-        $this->loadBalancer->removeNode($node);
+        /****************AOP handle request options end   *****************************/
+
+        $response = $this->getClient()->post($url, $options);
+        if ($response->getStatusCode() === 200) {
+            return (string)$response->getBody();
+        }
+//        $this->loadBalancer->removeNode($node);//3.0 bug
 
         return '';
     }

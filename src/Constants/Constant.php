@@ -798,4 +798,11 @@ class Constant
     public const DB_CONNECTION_APP_CATCH = self::DB_CONNECTION_PREFIX_APP . 'CATCH';
 
     public const DB_COLUMN_FAIL_TOTAL = 'fail_total';
+
+    public const JSON_RPC_HEADERS_KEY = 'json-rpc-headers';
+    public const RPC_PROTOCOL_KEY = 'x-jmiy-protocol';
+    public const RPC_APP_KEY = 'x-jmiy-app';
+    public const RPC_TOKEN_KEY = 'x-jmiy-token';
+    public const RPC_PLATFORM_KEY = 'x-jmiy-platform';
+    public const JSON_RPC_HTTP_PROTOCOL = 'jsonrpc-http';
 }
